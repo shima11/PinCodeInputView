@@ -16,29 +16,43 @@ class ViewController: UIViewController {
         let inputView = PinCodeInputView(digit: 6)
         view.addSubview(inputView)
         
-        inputView.frame = CGRect(x: 0, y: 0, width: view.bounds.width - 20, height: 80)
+        inputView.frame = CGRect(x: 0, y: 0, width: view.bounds.width - 40, height: 80)
         inputView.center = view.center
-        
         
     }
 }
 
 protocol PinCodeInputViewDelegate {
-    
+    // TODO: hogehoge
+    func changeText()
 }
 
 class PinCodeInputView: UIControl, UITextInputTraits {
     
-    var text: String = ""
-    
-    var isEmpty: Bool {
-        return text.isEmpty
+    var text: String = "" {
+        didSet {
+            print("text:", text)
+            items.enumerated().forEach { (index, item) in
+                if (0..<text.count).contains(index) {
+                    let _index = text.index(text.startIndex, offsetBy: index)
+                    item.label.text = String(text[_index])
+                } else {
+                    item.label.text = ""
+                }
+            }
+        }
     }
     
-    var isFilled: Bool {
-        return text.count == digit
-    }
+//    var isEmpty: Bool {
+//        return text.isEmpty
+//    }
+//
+//    var isFilled: Bool {
+//        return text.count == digit
+//    }
     
+    private var delegate: PinCodeInputViewDelegate? = nil
+
     private let digit: Int
     
     private let items: [ItemView]
@@ -134,6 +148,12 @@ class PinCodeInputView: UIControl, UITextInputTraits {
         }
     }
     
+    //MARK: UIView
+    
+    open override var intrinsicContentSize: CGSize {
+        return self.bounds.size
+    }
+    
 }
 
 extension PinCodeInputView : UIKeyInput {
@@ -143,21 +163,17 @@ extension PinCodeInputView : UIKeyInput {
     }
     
     open func insertText(_ textToInsert: String) {
-        
         if isEnabled && text.count + textToInsert.count <= digit {
             text.append(textToInsert)
             sendActions(for: .editingChanged)
         }
-        
     }
     
     open func deleteBackward() {
-        
         if isEnabled && !text.isEmpty {
             text.removeLast()
             sendActions(for: .editingChanged)
-        }
-        
+        }        
     }
     
 }
