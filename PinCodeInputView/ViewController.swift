@@ -29,17 +29,94 @@ protocol PinCodeInputViewDelegate {
 
 class PinCodeInputView: UIControl, UITextInputTraits {
     
+    class ItemView: UIView {
+        
+        var text: String = "" {
+            didSet {
+                label.text = text
+            }
+        }
+        
+        var showCursor: Bool = false {
+            didSet {
+                cursor.isHidden = !showCursor
+            }
+        }
+        
+        private let label: UILabel = .init()
+        // 正式名称 caret
+        private let cursor: UIView = .init()
+        
+        init() {
+            
+            super.init(frame: .zero)
+            
+            backgroundColor = UIColor.black.withAlphaComponent(0.3)
+            addSubview(label)
+            addSubview(cursor)
+            
+            label.font = UIFont.systemFont(ofSize: 28, weight: .bold)
+            label.textColor = .white
+            label.textAlignment = .center
+            label.isUserInteractionEnabled = false
+            
+            cursor.backgroundColor = UIColor(red: 69/255, green: 108/255, blue: 1, alpha: 1)
+            cursor.frame = CGRect(x: 0, y: 0, width: 10, height: 10)
+            
+            cursor.isHidden = true
+            
+            UIView.animateKeyframes(
+                withDuration: 1.6,
+                delay: 0.8,
+                options: [.repeat],
+                animations: {
+                    UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.2, animations: {
+                        self.cursor.alpha = 0
+                    })
+                    UIView.addKeyframe(withRelativeStartTime: 0.8, relativeDuration: 0.2, animations: {
+                        self.cursor.alpha = 1
+                    })
+            },
+                completion: nil
+            )
+            
+            layer.cornerRadius = 8
+            clipsToBounds = true
+            
+        }
+        
+        required init?(coder aDecoder: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
+        }
+        
+        override func layoutSubviews() {
+            super.layoutSubviews()
+            
+            label.frame = bounds
+            
+            let width: CGFloat = 3
+            let height: CGFloat = bounds.height * 0.6
+            cursor.frame = CGRect(x: (bounds.width - width)/2, y: (bounds.height - height)/2, width: width, height: height)
+        }
+        
+    }
+    
     var text: String = "" {
         didSet {
             print("text:", text)
+            let cursorPosition = text.count
+            // テキストの更新
             items.enumerated().forEach { (index, item) in
                 if (0..<text.count).contains(index) {
                     let _index = text.index(text.startIndex, offsetBy: index)
-                    item.label.text = String(text[_index])
+                    item.text = String(text[_index])
                 } else {
-                    item.label.text = ""
+                    item.text = ""
                 }
+                // cursorの表示
+                item.showCursor = (index == cursorPosition) ? true : false
             }
+//            setNeedsDisplay()
         }
     }
     
@@ -57,35 +134,6 @@ class PinCodeInputView: UIControl, UITextInputTraits {
     
     private let items: [ItemView]
     private let stackView: UIStackView = .init()
-    
-    class ItemView: UIView {
-        
-        let label: UILabel = .init()
-        
-        init() {
-            
-            super.init(frame: .zero)
-            
-            backgroundColor = UIColor.black.withAlphaComponent(0.3)
-            addSubview(label)
-            
-            label.isUserInteractionEnabled = false
-            
-            layer.cornerRadius = 8
-            clipsToBounds = true
-            
-        }
-        
-        required init?(coder aDecoder: NSCoder) {
-            fatalError("init(coder:) has not been implemented")
-        }
-        
-        override func layoutSubviews() {
-            super.layoutSubviews()
-            label.frame = bounds
-        }
-        
-    }
     
     init(digit: Int) {
         
@@ -108,6 +156,7 @@ class PinCodeInputView: UIControl, UITextInputTraits {
     }
     
     @objc func didTap() {
+        items.first?.showCursor = true
         becomeFirstResponder()
     }
     
@@ -120,9 +169,6 @@ class PinCodeInputView: UIControl, UITextInputTraits {
         stackView.frame = bounds
     }
     
-    
-    // MARK: UITextInputTraits protocol properties
-    
     open var autocapitalizationType = UITextAutocapitalizationType.none
     open var autocorrectionType = UITextAutocorrectionType.no
     open var spellCheckingType = UITextSpellCheckingType.no
@@ -131,28 +177,13 @@ class PinCodeInputView: UIControl, UITextInputTraits {
     open var returnKeyType = UIReturnKeyType.done
     open var enablesReturnKeyAutomatically = true
     
-    // MARK: UIResponder
-    
     open override var canBecomeFirstResponder: Bool {
         return true
     }
     
-    private var accessoryView: UIView?
-    
-    override open var inputAccessoryView: UIView? {
-        get {
-            return accessoryView
-        }
-        set(value) {
-            accessoryView = value
-        }
-    }
-    
-    //MARK: UIView
-    
-    open override var intrinsicContentSize: CGSize {
-        return self.bounds.size
-    }
+//    open override var intrinsicContentSize: CGSize {
+//        return self.bounds.size
+//    }
     
 }
 
