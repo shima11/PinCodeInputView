@@ -10,16 +10,17 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    let pinCodeInputView = PinCodeInputView(digit: 6)
+    let pinCodeInputView: PinCodeInputView = .init(digit: 6)
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
+        pinCodeInputView.setHandler(textHandler: { text in
+            print(text)
+        })
         view.addSubview(pinCodeInputView)
-        
         pinCodeInputView.frame = CGRect(x: 0, y: 0, width: view.bounds.width - 40, height: 80)
         pinCodeInputView.center = view.center
-        pinCodeInputView.delegate = self
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tap))
         view.addGestureRecognizer(tapGesture)
@@ -29,17 +30,6 @@ class ViewController: UIViewController {
         pinCodeInputView.resignFirstResponder()
     }
     
-}
-
-extension ViewController: PinCodeInputViewDelegate {
-    
-    func change(text: String) {
-        print(text)
-    }
-}
-
-protocol PinCodeInputViewDelegate {
-    func change(text: String)
 }
 
 class PinCodeInputView: UIControl, UITextInputTraits {
@@ -117,7 +107,9 @@ class PinCodeInputView: UIControl, UITextInputTraits {
     
     var text: String = "" {
         didSet {
-            delegate?.change(text: text)
+            if let handler = textHandler {
+                handler(text)
+            }
             showCursor()
         }
     }
@@ -130,10 +122,8 @@ class PinCodeInputView: UIControl, UITextInputTraits {
 //        return text.count == digit
 //    }
     
-    var delegate: PinCodeInputViewDelegate? = nil
-
     private let digit: Int
-    
+    private var textHandler: ((String) -> ())? = nil
     private let items: [ItemView]
     private let stackView: UIStackView = .init()
     
@@ -155,6 +145,10 @@ class PinCodeInputView: UIControl, UITextInputTraits {
         stackView.spacing = 8
         stackView.distribution = .fillEqually
         
+    }
+    
+    func setHandler(textHandler: @escaping (String) -> ()) {
+        self.textHandler = textHandler
     }
     
     @objc func didTap() {
@@ -218,7 +212,7 @@ extension PinCodeInputView : UIKeyInput {
         }
     }
     
-    open func deleteBackward() {
+     open func deleteBackward() {
         if isEnabled && !text.isEmpty {
             text.removeLast()
             sendActions(for: .editingChanged)
