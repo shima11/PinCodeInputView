@@ -199,13 +199,13 @@ public class PinCodeInputView: UIControl, UITextInputTraits, UIKeyInput {
     
     // MARK: - UITextInputTraits
     
-    var autocapitalizationType = UITextAutocapitalizationType.none
-    var autocorrectionType = UITextAutocorrectionType.no
-    var spellCheckingType = UITextSpellCheckingType.no
-    var keyboardType = UIKeyboardType.numberPad
-    var keyboardAppearance = UIKeyboardAppearance.default
-    var returnKeyType = UIReturnKeyType.done
-    var enablesReturnKeyAutomatically = true
+    public var autocapitalizationType = UITextAutocapitalizationType.none
+    public var autocorrectionType = UITextAutocorrectionType.no
+    public var spellCheckingType = UITextSpellCheckingType.no
+    public var keyboardType = UIKeyboardType.numberPad
+    public var keyboardAppearance = UIKeyboardAppearance.default
+    public var returnKeyType = UIReturnKeyType.done
+    public var enablesReturnKeyAutomatically = true
     
     // MARK: - UIResponder
     
