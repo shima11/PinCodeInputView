@@ -9,22 +9,37 @@
 import UIKit
 
 class ViewController: UIViewController {
+    
+    let pinCodeInputView = PinCodeInputView(digit: 6)
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let inputView = PinCodeInputView(digit: 6)
-        view.addSubview(inputView)
+        view.addSubview(pinCodeInputView)
         
-        inputView.frame = CGRect(x: 0, y: 0, width: view.bounds.width - 40, height: 80)
-        inputView.center = view.center
+        pinCodeInputView.frame = CGRect(x: 0, y: 0, width: view.bounds.width - 40, height: 80)
+        pinCodeInputView.center = view.center
+        pinCodeInputView.delegate = self
         
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tap))
+        view.addGestureRecognizer(tapGesture)
+    }
+    
+    @objc func tap() {
+        pinCodeInputView.resignFirstResponder()
+    }
+    
+}
+
+extension ViewController: PinCodeInputViewDelegate {
+    
+    func change(text: String) {
+        print(text)
     }
 }
 
 protocol PinCodeInputViewDelegate {
-    // TODO: hogehoge
-    func changeText()
+    func change(text: String)
 }
 
 class PinCodeInputView: UIControl, UITextInputTraits {
@@ -37,14 +52,13 @@ class PinCodeInputView: UIControl, UITextInputTraits {
             }
         }
         
-        var showCursor: Bool = false {
+        var isHiddenCursor: Bool = true {
             didSet {
-                cursor.isHidden = !showCursor
+                cursor.isHidden = isHiddenCursor
             }
         }
         
         private let label: UILabel = .init()
-        // 正式名称 caret
         private let cursor: UIView = .init()
         
         init() {
@@ -103,20 +117,8 @@ class PinCodeInputView: UIControl, UITextInputTraits {
     
     var text: String = "" {
         didSet {
-            print("text:", text)
-            let cursorPosition = text.count
-            // テキストの更新
-            items.enumerated().forEach { (index, item) in
-                if (0..<text.count).contains(index) {
-                    let _index = text.index(text.startIndex, offsetBy: index)
-                    item.text = String(text[_index])
-                } else {
-                    item.text = ""
-                }
-                // cursorの表示
-                item.showCursor = (index == cursorPosition) ? true : false
-            }
-//            setNeedsDisplay()
+            delegate?.change(text: text)
+            showCursor()
         }
     }
     
@@ -128,7 +130,7 @@ class PinCodeInputView: UIControl, UITextInputTraits {
 //        return text.count == digit
 //    }
     
-    private var delegate: PinCodeInputViewDelegate? = nil
+    var delegate: PinCodeInputViewDelegate? = nil
 
     private let digit: Int
     
@@ -144,10 +146,10 @@ class PinCodeInputView: UIControl, UITextInputTraits {
         
         addSubview(stackView)
         
-        items.forEach {
+        items.enumerated().forEach { (index, item) in
             let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTap))
-            $0.addGestureRecognizer(tapGesture)
-            stackView.addArrangedSubview($0)
+            item.addGestureRecognizer(tapGesture)
+            stackView.addArrangedSubview(item)
         }
         stackView.axis = .horizontal
         stackView.spacing = 8
@@ -156,9 +158,25 @@ class PinCodeInputView: UIControl, UITextInputTraits {
     }
     
     @objc func didTap() {
-        items.first?.showCursor = true
+        // TODO:途中で編集する機能がない
+        showCursor()
         becomeFirstResponder()
     }
+    
+    private func showCursor() {
+        let cursorPosition = text.count
+        items.enumerated().forEach { (index, item) in
+            if (0..<text.count).contains(index) {
+                let _index = text.index(text.startIndex, offsetBy: index)
+                item.text = String(text[_index])
+            } else {
+                item.text = ""
+            }
+            item.isHiddenCursor = (index == cursorPosition) ? false : true
+        }
+    }
+
+    // TODO: キーボードを閉じたときにカーソルを消す機能
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
