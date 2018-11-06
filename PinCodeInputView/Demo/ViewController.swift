@@ -16,12 +16,13 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        pinCodeInputView.setHandler(textHandler: { text in
+        pinCodeInputView.set(changeTextHandler: { text in
             print(text)
         })
         view.addSubview(pinCodeInputView)
         pinCodeInputView.frame = CGRect(x: 0, y: 0, width: view.bounds.width - 40, height: 80)
         pinCodeInputView.center = view.center
+        pinCodeInputView.set(font: .systemFont(ofSize: 28, weight: .bold))
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tap))
         view.addGestureRecognizer(tapGesture)

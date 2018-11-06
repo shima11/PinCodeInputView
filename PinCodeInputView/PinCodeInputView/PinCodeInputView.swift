@@ -34,8 +34,7 @@ public class PinCodeInputView: UIControl, UITextInputTraits, UIKeyInput {
             backgroundColor = UIColor.black.withAlphaComponent(0.3)
             addSubview(label)
             addSubview(cursor)
-            
-            label.font = UIFont.systemFont(ofSize: 28, weight: .bold)
+        
             label.textColor = .white
             label.textAlignment = .center
             label.isUserInteractionEnabled = false
@@ -79,13 +78,17 @@ public class PinCodeInputView: UIControl, UITextInputTraits, UIKeyInput {
             cursor.frame = CGRect(x: (bounds.width - width)/2, y: (bounds.height - height)/2, width: width, height: height)
         }
         
+        func set(font: UIFont) {
+            label.font = font
+        }
+        
     }
     
     // MARK: - Properties
     
     public var text: String = "" {
         didSet {
-            if let handler = textHandler {
+            if let handler = changeTextHandler {
                 handler(text)
             }
             showCursor()
@@ -101,7 +104,7 @@ public class PinCodeInputView: UIControl, UITextInputTraits, UIKeyInput {
     }
     
     private let digit: Int
-    private var textHandler: ((String) -> ())? = nil
+    private var changeTextHandler: ((String) -> ())? = nil
     private let items: [ItemView]
     private let stackView: UIStackView = .init()
     
@@ -124,7 +127,6 @@ public class PinCodeInputView: UIControl, UITextInputTraits, UIKeyInput {
         stackView.axis = .horizontal
         stackView.spacing = 8
         stackView.distribution = .fillEqually
-        
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -142,8 +144,12 @@ public class PinCodeInputView: UIControl, UITextInputTraits, UIKeyInput {
         return self.bounds.size
     }
 
-    public func setHandler(textHandler: @escaping (String) -> ()) {
-        self.textHandler = textHandler
+    public func set(changeTextHandler: @escaping (String) -> ()) {
+        self.changeTextHandler = changeTextHandler
+    }
+    
+    public func set(font: UIFont) {
+        items.forEach { $0.set(font: font)}
     }
     
     @objc
