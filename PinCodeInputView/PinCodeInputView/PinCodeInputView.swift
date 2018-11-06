@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PinCodeInputView: UIControl, UITextInputTraits, UIKeyInput {
+public class PinCodeInputView: UIControl, UITextInputTraits, UIKeyInput {
     
     class ItemView: UIView {
         
@@ -83,7 +83,7 @@ class PinCodeInputView: UIControl, UITextInputTraits, UIKeyInput {
     
     // MARK: - Properties
     
-    var text: String = "" {
+    public var text: String = "" {
         didSet {
             if let handler = textHandler {
                 handler(text)
@@ -92,11 +92,11 @@ class PinCodeInputView: UIControl, UITextInputTraits, UIKeyInput {
         }
     }
     
-    var isEmpty: Bool {
+    public var isEmpty: Bool {
         return text.isEmpty
     }
     
-    var isFilled: Bool {
+    public var isFilled: Bool {
         return text.count == digit
     }
     
@@ -107,7 +107,7 @@ class PinCodeInputView: UIControl, UITextInputTraits, UIKeyInput {
     
     // MARK: - Initializers
     
-    init(digit: Int) {
+    public init(digit: Int) {
         
         self.digit = digit
         self.items = (0..<digit).map { _ in ItemView() }
@@ -133,16 +133,16 @@ class PinCodeInputView: UIControl, UITextInputTraits, UIKeyInput {
 
     // MARK: - Functions
 
-    override func layoutSubviews() {
+    override public func layoutSubviews() {
         super.layoutSubviews()
         stackView.frame = bounds
     }
     
-    override var intrinsicContentSize: CGSize {
+    override public var intrinsicContentSize: CGSize {
         return self.bounds.size
     }
 
-    func setHandler(textHandler: @escaping (String) -> ()) {
+    public func setHandler(textHandler: @escaping (String) -> ()) {
         self.textHandler = textHandler
     }
     
@@ -173,18 +173,18 @@ class PinCodeInputView: UIControl, UITextInputTraits, UIKeyInput {
     
     // MARK: - UIKeyInput
     
-    var hasText: Bool {
+    public var hasText: Bool {
         return !(text.isEmpty)
     }
     
-    func insertText(_ textToInsert: String) {
+    public func insertText(_ textToInsert: String) {
         if isEnabled && text.count + textToInsert.count <= digit && textToInsert.isOnlyNumeric() {
             text.append(textToInsert)
             sendActions(for: .editingChanged)
         }
     }
     
-    func deleteBackward() {
+    public func deleteBackward() {
         if isEnabled && !text.isEmpty {
             text.removeLast()
             sendActions(for: .editingChanged)
@@ -203,11 +203,12 @@ class PinCodeInputView: UIControl, UITextInputTraits, UIKeyInput {
     
     // MARK: - UIResponder
     
-    open override var canBecomeFirstResponder: Bool {
+    override public var canBecomeFirstResponder: Bool {
         return true
     }
 
-    override func resignFirstResponder() -> Bool {
+    @discardableResult
+    override public func resignFirstResponder() -> Bool {
         hiddenCursor()
         return super.resignFirstResponder()
     }

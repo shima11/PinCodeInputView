@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import PinCodeInputView
 
 class ViewController: UIViewController {
     
