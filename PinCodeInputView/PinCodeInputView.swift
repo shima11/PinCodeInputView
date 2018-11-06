@@ -178,7 +178,7 @@ class PinCodeInputView: UIControl, UITextInputTraits, UIKeyInput {
     }
     
     func insertText(_ textToInsert: String) {
-        if isEnabled && text.count + textToInsert.count <= digit {
+        if isEnabled && text.count + textToInsert.count <= digit && textToInsert.isOnlyNumeric() {
             text.append(textToInsert)
             sendActions(for: .editingChanged)
         }
@@ -193,15 +193,13 @@ class PinCodeInputView: UIControl, UITextInputTraits, UIKeyInput {
     
     // MARK: - UITextInputTraits
     
-    //    var autocapitalizationType = UITextAutocapitalizationType.none
-    //    var autocorrectionType = UITextAutocorrectionType.no
-    //    var spellCheckingType = UITextSpellCheckingType.no
+    var autocapitalizationType = UITextAutocapitalizationType.none
+    var autocorrectionType = UITextAutocorrectionType.no
+    var spellCheckingType = UITextSpellCheckingType.no
     var keyboardType = UIKeyboardType.numberPad
-    //    var keyboardAppearance = UIKeyboardAppearance.default
-    //    var returnKeyType = UIReturnKeyType.done
-    //    var enablesReturnKeyAutomatically = true
-    
-
+    var keyboardAppearance = UIKeyboardAppearance.default
+    var returnKeyType = UIReturnKeyType.done
+    var enablesReturnKeyAutomatically = true
     
     // MARK: - UIResponder
     
