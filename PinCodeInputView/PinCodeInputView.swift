@@ -142,15 +142,13 @@ class PinCodeInputView: UIControl, UITextInputTraits, UIKeyInput {
         return self.bounds.size
     }
 
-    // TODO: 途中から編集する機能（textがdigit以下のときにそこから編集を始める）
-
     func setHandler(textHandler: @escaping (String) -> ()) {
         self.textHandler = textHandler
     }
     
     @objc
     private func didTap() {
-        items.first?.isHiddenCursor = false
+        showCursor()
         becomeFirstResponder()
     }
     
