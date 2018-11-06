@@ -60,8 +60,8 @@
 			children = (
 				D422CB6721904F660050BA92 /* AppDelegate.swift */,
 				D422CB6921904F660050BA92 /* ViewController.swift */,
-				D49EEFE4219173AB00FB4379 /* PinCodeInputView.swift */,
 				D49EEFE821918D7800FB4379 /* String+Validation.swift */,
+				D49EEFE4219173AB00FB4379 /* PinCodeInputView.swift */,
 				D422CB6B21904F660050BA92 /* Main.storyboard */,
 				D422CB6E21904F680050BA92 /* Assets.xcassets */,
 				D422CB7021904F680050BA92 /* LaunchScreen.storyboard */,
