@@ -105,19 +105,6 @@ class PinCodeInputView: UIControl, UITextInputTraits, UIKeyInput {
     private let items: [ItemView]
     private let stackView: UIStackView = .init()
     
-    open override var canBecomeFirstResponder: Bool {
-        return true
-    }
-    
-//    var autocapitalizationType = UITextAutocapitalizationType.none
-//    var autocorrectionType = UITextAutocorrectionType.no
-//    var spellCheckingType = UITextSpellCheckingType.no
-    var keyboardType = UIKeyboardType.numberPad
-//    var keyboardAppearance = UIKeyboardAppearance.default
-//    var returnKeyType = UIReturnKeyType.done
-//    var enablesReturnKeyAutomatically = true
-
-    
     // MARK: - Initializers
     
     init(digit: Int) {
@@ -155,8 +142,7 @@ class PinCodeInputView: UIControl, UITextInputTraits, UIKeyInput {
         return self.bounds.size
     }
 
-    // TODO: キーボードを閉じたときにカーソルを消す
-    // TODO: 途中で編集する機能
+    // TODO: 途中から編集する機能（textがdigit以下のときにそこから編集を始める）
 
     func setHandler(textHandler: @escaping (String) -> ()) {
         self.textHandler = textHandler
@@ -182,6 +168,11 @@ class PinCodeInputView: UIControl, UITextInputTraits, UIKeyInput {
         }
     }
     
+    private func hiddenCursor() {
+        
+        items.forEach { $0.isHiddenCursor = true }
+    }
+    
     // MARK: - UIKeyInput
     
     var hasText: Bool {
@@ -200,6 +191,29 @@ class PinCodeInputView: UIControl, UITextInputTraits, UIKeyInput {
             text.removeLast()
             sendActions(for: .editingChanged)
         }
+    }
+    
+    // MARK: - UITextInputTraits
+    
+    //    var autocapitalizationType = UITextAutocapitalizationType.none
+    //    var autocorrectionType = UITextAutocorrectionType.no
+    //    var spellCheckingType = UITextSpellCheckingType.no
+    var keyboardType = UIKeyboardType.numberPad
+    //    var keyboardAppearance = UIKeyboardAppearance.default
+    //    var returnKeyType = UIReturnKeyType.done
+    //    var enablesReturnKeyAutomatically = true
+    
+
+    
+    // MARK: - UIResponder
+    
+    open override var canBecomeFirstResponder: Bool {
+        return true
+    }
+
+    override func resignFirstResponder() -> Bool {
+        hiddenCursor()
+        return super.resignFirstResponder()
     }
     
 }
