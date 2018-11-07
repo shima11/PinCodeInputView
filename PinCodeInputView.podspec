@@ -14,6 +14,7 @@ Pod::Spec.new do |s|
 
   s.description  = <<-DESC
 TextView for entering pin code. 
+You can create an input part of PinCode to use for phone number authentication.
                   DESC
 
   # s.screenshots  = "www.example.com/screenshots_1.gif", "www.example.com/screenshots_2.gif"

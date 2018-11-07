@@ -120,6 +120,9 @@ public class PinCodeInputView: UIControl, UITextInputTraits, UIKeyInput {
     
     // MARK: - Properties
     
+    // TODO: need to text validation from clipboard text
+    // TODO: to inject style from the outside
+    
     public var text: String = "" {
         didSet {
             if let handler = changeTextHandler {

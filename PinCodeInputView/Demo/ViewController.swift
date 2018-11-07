@@ -57,10 +57,9 @@ class ViewController: UIViewController {
         print("color:", UIPasteboard.general.colors ?? "")
         print("image:", UIPasteboard.general.images ?? "")
         
-        if let string = UIPasteboard.general.string {
-            // TODO: need to validation
+//        if let string = UIPasteboard.general.string {
 //            pinCodeInputView.text = string
-        }
+//        }
     }
     
     @objc func tap() {
