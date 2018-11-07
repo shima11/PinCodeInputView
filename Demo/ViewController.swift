@@ -11,7 +11,7 @@ import PinCodeInputView
 
 class ViewController: UIViewController {
     
-    let pinCodeInputView: PinCodeInputView = .init(digit: 4)
+    let pinCodeInputView: PinCodeInputView = .init(digit: 6)
     let enterButton = UIButton()
 
     override func viewDidLoad() {
@@ -78,9 +78,9 @@ class ViewController: UIViewController {
         print("color:", UIPasteboard.general.colors ?? "")
         print("image:", UIPasteboard.general.images ?? "")
         
-//        if let string = UIPasteboard.general.string {
-//            pinCodeInputView.text = string
-//        }
+        if let string = UIPasteboard.general.string {
+            pinCodeInputView.set(text: string)
+        }
     }
     
     @objc func tap() {

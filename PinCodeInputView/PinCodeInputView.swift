@@ -120,10 +120,9 @@ public class PinCodeInputView: UIControl, UITextInputTraits, UIKeyInput {
     
     // MARK: - Properties
     
-    // TODO: need to text validation from clipboard text
     // TODO: to inject style from the outside
     
-    public var text: String = "" {
+    private(set) public var text: String = "" {
         didSet {
             if let handler = changeTextHandler {
                 handler(text)
@@ -151,6 +150,7 @@ public class PinCodeInputView: UIControl, UITextInputTraits, UIKeyInput {
         
         self.digit = digit
         self.items = (0..<digit).map { _ in ItemView() }
+        self.text = ""
         
         super.init(frame: .zero)
         
@@ -178,6 +178,12 @@ public class PinCodeInputView: UIControl, UITextInputTraits, UIKeyInput {
     
     override public var intrinsicContentSize: CGSize {
         return self.bounds.size
+    }
+
+    public func set(text: String) {
+        if text.isPinCode(digit: digit) {
+            self.text = text
+        }
     }
 
     public func set(changeTextHandler: @escaping (String) -> ()) {
