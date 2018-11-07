@@ -12,20 +12,29 @@ public class PinCodeInputView: UIControl, UITextInputTraits, UIKeyInput {
     
     public struct Appearance {
         
+        // struct ItemAppearance
+        
         let font: UIFont
         let textColor: UIColor
         let backgroundColor: UIColor
         let cursorColor: UIColor
+        let cornerRadius: CGFloat
         
-        public init(font: UIFont, textColor: UIColor, backgroundColor: UIColor, cursorColor: UIColor) {
+        // general appearance
+        
+        let spacing: CGFloat
+        
+        public init(font: UIFont, textColor: UIColor, backgroundColor: UIColor, cursorColor: UIColor, cornerRadius: CGFloat, spacing: CGFloat) {
             self.font = font
             self.textColor = textColor
             self.backgroundColor = backgroundColor
             self.cursorColor = cursorColor
+            self.cornerRadius = cornerRadius
+            self.spacing = spacing
         }
     }
     
-    class ItemView: UIView {
+    private class ItemView: UIView {
         
         var text: String = "" {
             didSet {
@@ -49,10 +58,11 @@ public class PinCodeInputView: UIControl, UITextInputTraits, UIKeyInput {
             addSubview(label)
             addSubview(cursor)
         
+            clipsToBounds = true
+
             label.textAlignment = .center
             label.isUserInteractionEnabled = false
             
-            cursor.frame = CGRect(x: 0, y: 0, width: 10, height: 10)
             cursor.isHidden = true
             
             UIView.animateKeyframes(
@@ -60,19 +70,21 @@ public class PinCodeInputView: UIControl, UITextInputTraits, UIKeyInput {
                 delay: 0.8,
                 options: [.repeat],
                 animations: {
-                    UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.2, animations: {
-                        self.cursor.alpha = 0
+                    UIView.addKeyframe(
+                        withRelativeStartTime: 0,
+                        relativeDuration: 0.2,
+                        animations: {
+                            self.cursor.alpha = 0
                     })
-                    UIView.addKeyframe(withRelativeStartTime: 0.8, relativeDuration: 0.2, animations: {
-                        self.cursor.alpha = 1
+                    UIView.addKeyframe(
+                        withRelativeStartTime: 0.8,
+                        relativeDuration: 0.2,
+                        animations: {
+                            self.cursor.alpha = 1
                     })
             },
                 completion: nil
             )
-            
-            layer.cornerRadius = 8
-            clipsToBounds = true
-            
         }
         
         required init?(coder aDecoder: NSCoder) {
@@ -86,14 +98,21 @@ public class PinCodeInputView: UIControl, UITextInputTraits, UIKeyInput {
             
             let width: CGFloat = 2
             let height: CGFloat = bounds.height * 0.6
-            cursor.frame = CGRect(x: (bounds.width - width)/2, y: (bounds.height - height)/2, width: width, height: height)
+            
+            cursor.frame = CGRect(
+                x: (bounds.width - width) / 2,
+                y: (bounds.height - height) / 2,
+                width: width,
+                height: height
+            )
         }
         
         func set(appearance: Appearance) {
             label.font = appearance.font
             label.textColor = appearance.textColor
-            backgroundColor = appearance.backgroundColor
             cursor.backgroundColor = appearance.cursorColor
+            backgroundColor = appearance.backgroundColor
+            layer.cornerRadius = appearance.cornerRadius
         }
     }
     
@@ -106,7 +125,7 @@ public class PinCodeInputView: UIControl, UITextInputTraits, UIKeyInput {
             if let handler = changeTextHandler {
                 handler(text)
             }
-            showCursor()
+            updateText()
         }
     }
     
@@ -140,7 +159,6 @@ public class PinCodeInputView: UIControl, UITextInputTraits, UIKeyInput {
             stackView.addArrangedSubview(item)
         }
         stackView.axis = .horizontal
-        stackView.spacing = 8
         stackView.distribution = .fillEqually
     }
     
@@ -165,17 +183,17 @@ public class PinCodeInputView: UIControl, UITextInputTraits, UIKeyInput {
         
     public func set(appearance: Appearance) {
         items.forEach { $0.set(appearance: appearance) }
+        stackView.spacing = appearance.spacing
     }
     
     @objc
     private func didTap() {
-        showCursor()
+        updateCursor()
         becomeFirstResponder()
     }
     
-    private func showCursor() {
+    private func updateText() {
         
-        let cursorPosition = text.count
         items.enumerated().forEach { (index, item) in
             if (0..<text.count).contains(index) {
                 let _index = text.index(text.startIndex, offsetBy: index)
@@ -183,6 +201,14 @@ public class PinCodeInputView: UIControl, UITextInputTraits, UIKeyInput {
             } else {
                 item.text = ""
             }
+        }
+        updateCursor()
+    }
+    
+    private func updateCursor() {
+        
+        let cursorPosition = text.count
+        items.enumerated().forEach { (index, item) in
             item.isHiddenCursor = (index == cursorPosition) ? false : true
         }
     }

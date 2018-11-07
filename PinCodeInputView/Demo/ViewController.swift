@@ -25,8 +25,11 @@ class ViewController: UIViewController {
         pinCodeInputView.set(
             appearance: .init(
                 font: .systemFont(ofSize: 28, weight: .bold),
-                textColor: .white, backgroundColor: UIColor.black.withAlphaComponent(0.3),
-                cursorColor: UIColor(red: 69/255, green: 108/255, blue: 1, alpha: 1)
+                textColor: .white,
+                backgroundColor: UIColor.black.withAlphaComponent(0.3),
+                cursorColor: UIColor(red: 69/255, green: 108/255, blue: 1, alpha: 1),
+                cornerRadius: 8,
+                spacing: 8
             )
         )
         
@@ -56,7 +59,7 @@ class ViewController: UIViewController {
         
         if let string = UIPasteboard.general.string {
             // TODO: need to validation
-            pinCodeInputView.text = string
+//            pinCodeInputView.text = string
         }
     }
     
