@@ -22,7 +22,13 @@ class ViewController: UIViewController {
         view.addSubview(pinCodeInputView)
         pinCodeInputView.frame = CGRect(x: 0, y: 0, width: view.bounds.width - 40, height: 80)
         pinCodeInputView.center = view.center
-        pinCodeInputView.set(font: .systemFont(ofSize: 28, weight: .bold))
+        pinCodeInputView.set(
+            appearance: .init(
+                font: .systemFont(ofSize: 28, weight: .bold),
+                textColor: .white, backgroundColor: UIColor.black.withAlphaComponent(0.3),
+                cursorColor: UIColor(red: 69/255, green: 108/255, blue: 1, alpha: 1)
+            )
+        )
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tap))
         view.addGestureRecognizer(tapGesture)

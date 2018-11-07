@@ -10,6 +10,21 @@ import UIKit
 
 public class PinCodeInputView: UIControl, UITextInputTraits, UIKeyInput {
     
+    public struct Appearance {
+        
+        let font: UIFont
+        let textColor: UIColor
+        let backgroundColor: UIColor
+        let cursorColor: UIColor
+        
+        public init(font: UIFont, textColor: UIColor, backgroundColor: UIColor, cursorColor: UIColor) {
+            self.font = font
+            self.textColor = textColor
+            self.backgroundColor = backgroundColor
+            self.cursorColor = cursorColor
+        }
+    }
+    
     class ItemView: UIView {
         
         var text: String = "" {
@@ -31,17 +46,13 @@ public class PinCodeInputView: UIControl, UITextInputTraits, UIKeyInput {
             
             super.init(frame: .zero)
             
-            backgroundColor = UIColor.black.withAlphaComponent(0.3)
             addSubview(label)
             addSubview(cursor)
         
-            label.textColor = .white
             label.textAlignment = .center
             label.isUserInteractionEnabled = false
             
-            cursor.backgroundColor = UIColor(red: 69/255, green: 108/255, blue: 1, alpha: 1)
             cursor.frame = CGRect(x: 0, y: 0, width: 10, height: 10)
-            
             cursor.isHidden = true
             
             UIView.animateKeyframes(
@@ -78,11 +89,15 @@ public class PinCodeInputView: UIControl, UITextInputTraits, UIKeyInput {
             cursor.frame = CGRect(x: (bounds.width - width)/2, y: (bounds.height - height)/2, width: width, height: height)
         }
         
-        func set(font: UIFont) {
-            label.font = font
+        func set(appearance: Appearance) {
+            label.font = appearance.font
+            label.textColor = appearance.textColor
+            backgroundColor = appearance.backgroundColor
+            cursor.backgroundColor = appearance.cursorColor
         }
-        
     }
+    
+    
     
     // MARK: - Properties
     
@@ -147,9 +162,9 @@ public class PinCodeInputView: UIControl, UITextInputTraits, UIKeyInput {
     public func set(changeTextHandler: @escaping (String) -> ()) {
         self.changeTextHandler = changeTextHandler
     }
-    
-    public func set(font: UIFont) {
-        items.forEach { $0.set(font: font)}
+        
+    public func set(appearance: Appearance) {
+        items.forEach { $0.set(appearance: appearance) }
     }
     
     @objc
