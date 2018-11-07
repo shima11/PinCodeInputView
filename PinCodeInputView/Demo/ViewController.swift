@@ -32,6 +32,32 @@ class ViewController: UIViewController {
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tap))
         view.addGestureRecognizer(tapGesture)
+        
+        NotificationCenter
+            .default
+            .addObserver(
+                self,
+                selector: #selector(didBecameActive),
+                name: UIApplication.didBecomeActiveNotification,
+                object: nil
+        )
+        
+        
+        
+    }
+    
+    @objc func didBecameActive() {
+        
+        print("did became active")
+        print("string:", UIPasteboard.general.strings ?? "")
+        print("url:", UIPasteboard.general.urls ?? "")
+        print("color:", UIPasteboard.general.colors ?? "")
+        print("image:", UIPasteboard.general.images ?? "")
+        
+        if let string = UIPasteboard.general.string {
+            // TODO: need to validation
+            pinCodeInputView.text = string
+        }
     }
     
     @objc func tap() {
