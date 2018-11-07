@@ -56,6 +56,7 @@
 		D49EF0142191935700FB4379 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D49EF020219193DA00FB4379 /* PinCodeInputView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PinCodeInputView.swift; sourceTree = "<group>"; };
 		D49EF021219193DA00FB4379 /* String+Validation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Validation.swift"; sourceTree = "<group>"; };
+		D49EF06821931E0400FB4379 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,6 +81,7 @@
 		D49EEFED2191930200FB4379 = {
 			isa = PBXGroup;
 			children = (
+				D49EF06821931E0400FB4379 /* README.md */,
 				D49EEFF92191930200FB4379 /* PinCodeInputView */,
 				D49EF0072191935500FB4379 /* Demo */,
 				D49EEFF82191930200FB4379 /* Products */,
