@@ -10,117 +10,7 @@ import UIKit
 
 public class PinCodeInputView: UIControl, UITextInputTraits, UIKeyInput {
     
-    public struct Appearance {
-        
-        // struct ItemAppearance
-        
-        let font: UIFont
-        let textColor: UIColor
-        let backgroundColor: UIColor
-        let cursorColor: UIColor
-        let cornerRadius: CGFloat
-        
-        // general appearance
-        
-        let spacing: CGFloat
-        
-        public init(font: UIFont, textColor: UIColor, backgroundColor: UIColor, cursorColor: UIColor, cornerRadius: CGFloat, spacing: CGFloat) {
-            self.font = font
-            self.textColor = textColor
-            self.backgroundColor = backgroundColor
-            self.cursorColor = cursorColor
-            self.cornerRadius = cornerRadius
-            self.spacing = spacing
-        }
-    }
-    
-    private class ItemView: UIView {
-        
-        var text: String = "" {
-            didSet {
-                label.text = text
-            }
-        }
-        
-        var isHiddenCursor: Bool = true {
-            didSet {
-                cursor.isHidden = isHiddenCursor
-            }
-        }
-        
-        private let label: UILabel = .init()
-        private let cursor: UIView = .init()
-        
-        init() {
-            
-            super.init(frame: .zero)
-            
-            addSubview(label)
-            addSubview(cursor)
-        
-            clipsToBounds = true
-
-            label.textAlignment = .center
-            label.isUserInteractionEnabled = false
-            
-            cursor.isHidden = true
-            
-            UIView.animateKeyframes(
-                withDuration: 1.6,
-                delay: 0.8,
-                options: [.repeat],
-                animations: {
-                    UIView.addKeyframe(
-                        withRelativeStartTime: 0,
-                        relativeDuration: 0.2,
-                        animations: {
-                            self.cursor.alpha = 0
-                    })
-                    UIView.addKeyframe(
-                        withRelativeStartTime: 0.8,
-                        relativeDuration: 0.2,
-                        animations: {
-                            self.cursor.alpha = 1
-                    })
-            },
-                completion: nil
-            )
-        }
-        
-        required init?(coder aDecoder: NSCoder) {
-            fatalError("init(coder:) has not been implemented")
-        }
-        
-        override func layoutSubviews() {
-            super.layoutSubviews()
-            
-            label.frame = bounds
-            
-            let width: CGFloat = 2
-            let height: CGFloat = bounds.height * 0.6
-            
-            cursor.frame = CGRect(
-                x: (bounds.width - width) / 2,
-                y: (bounds.height - height) / 2,
-                width: width,
-                height: height
-            )
-        }
-        
-        func set(appearance: Appearance) {
-            label.font = appearance.font
-            label.textColor = appearance.textColor
-            cursor.backgroundColor = appearance.cursorColor
-            backgroundColor = appearance.backgroundColor
-            layer.cornerRadius = appearance.cornerRadius
-        }
-    }
-    
-    
-    
     // MARK: - Properties
-    
-    // TODO: to inject style from the outside
     
     private(set) public var text: String = "" {
         didSet {
@@ -141,16 +31,31 @@ public class PinCodeInputView: UIControl, UITextInputTraits, UIKeyInput {
     
     private let digit: Int
     private var changeTextHandler: ((String) -> ())? = nil
-    private let items: [ItemView]
+    private let items: [ItemType & UIView]
     private let stackView: UIStackView = .init()
     
     // MARK: - Initializers
+    
+//    public init(_items: [ItemType & UIView]) {
+//
+//        self.digit = _items.count
+//        self.items = _items
+//
+//        super.init(frame: .zero)
+//
+//        items.enumerated().forEach { (index, item) in
+//            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTap))
+//            item.addGestureRecognizer(tapGesture)
+//            stackView.addArrangedSubview(item)
+//        }
+//        stackView.axis = .horizontal
+//        stackView.distribution = .fillEqually
+//    }
     
     public init(digit: Int) {
         
         self.digit = digit
         self.items = (0..<digit).map { _ in ItemView() }
-        self.text = ""
         
         super.init(frame: .zero)
         
@@ -206,9 +111,9 @@ public class PinCodeInputView: UIControl, UITextInputTraits, UIKeyInput {
         items.enumerated().forEach { (index, item) in
             if (0..<text.count).contains(index) {
                 let _index = text.index(text.startIndex, offsetBy: index)
-                item.text = String(text[_index])
+                item.text = text[_index]
             } else {
-                item.text = ""
+                item.text = nil
             }
         }
         updateCursor()
@@ -271,4 +176,127 @@ public class PinCodeInputView: UIControl, UITextInputTraits, UIKeyInput {
     
 }
 
+public struct Appearance {
+    
+    // struct ItemAppearance
+    
+    public let font: UIFont
+    public let textColor: UIColor
+    public let backgroundColor: UIColor
+    public let cursorColor: UIColor
+    public let cornerRadius: CGFloat
+    
+    // general appearance
+    
+    public let spacing: CGFloat
+    
+    public init(
+        font: UIFont,
+        textColor: UIColor,
+        backgroundColor: UIColor,
+        cursorColor: UIColor,
+        cornerRadius: CGFloat,
+        spacing: CGFloat
+        ) {
+        self.font = font
+        self.textColor = textColor
+        self.backgroundColor = backgroundColor
+        self.cursorColor = cursorColor
+        self.cornerRadius = cornerRadius
+        self.spacing = spacing
+    }
+}
 
+public protocol ItemType: class {
+    var text: Character? { get set }
+    var isHiddenCursor: Bool { get set }
+    var label: UILabel { get }
+    var cursor: UIView { get }
+    func set(appearance: Appearance)
+}
+
+public class ItemView: UIView, ItemType {
+    
+    public var text: Character? = nil {
+        didSet {
+            guard let text = text else {
+                label.text = nil
+                return
+            }
+            label.text = String(text)
+        }
+    }
+    
+    public var isHiddenCursor: Bool = true {
+        didSet {
+            cursor.isHidden = isHiddenCursor
+        }
+    }
+    
+    public let label: UILabel = .init()
+    public let cursor: UIView = .init()
+    
+    init() {
+        
+        super.init(frame: .zero)
+        
+        addSubview(label)
+        addSubview(cursor)
+        
+        clipsToBounds = true
+        
+        label.textAlignment = .center
+        label.isUserInteractionEnabled = false
+        
+        cursor.isHidden = true
+        
+        UIView.animateKeyframes(
+            withDuration: 1.6,
+            delay: 0.8,
+            options: [.repeat],
+            animations: {
+                UIView.addKeyframe(
+                    withRelativeStartTime: 0,
+                    relativeDuration: 0.2,
+                    animations: {
+                        self.cursor.alpha = 0
+                })
+                UIView.addKeyframe(
+                    withRelativeStartTime: 0.8,
+                    relativeDuration: 0.2,
+                    animations: {
+                        self.cursor.alpha = 1
+                })
+        },
+            completion: nil
+        )
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override public func layoutSubviews() {
+        super.layoutSubviews()
+        
+        label.frame = bounds
+        
+        let width: CGFloat = 2
+        let height: CGFloat = bounds.height * 0.6
+        
+        cursor.frame = CGRect(
+            x: (bounds.width - width) / 2,
+            y: (bounds.height - height) / 2,
+            width: width,
+            height: height
+        )
+    }
+    
+    public func set(appearance: Appearance) {
+        label.font = appearance.font
+        label.textColor = appearance.textColor
+        cursor.backgroundColor = appearance.cursorColor
+        backgroundColor = appearance.backgroundColor
+        layer.cornerRadius = appearance.cornerRadius
+    }
+}

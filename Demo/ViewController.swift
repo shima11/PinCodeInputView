@@ -9,9 +9,92 @@
 import UIKit
 import PinCodeInputView
 
+
+//class CustomItem: UIView, ItemType {
+//
+//    var text: Character? = nil
+//
+//    var isHiddenCursor: Bool = false
+//
+//    var label: UILabel = .init()
+//
+//    var cursor: UIView = .init()
+//
+//    func set(appearance: Appearance) {
+//
+//        label.font = appearance.font
+//        label.textColor = appearance.textColor
+//        cursor.backgroundColor = appearance.cursorColor
+//        backgroundColor = appearance.backgroundColor
+//        layer.cornerRadius = appearance.cornerRadius
+//        layoutIfNeeded()
+//    }
+//
+//    init() {
+//
+//        super.init(frame: .zero)
+//
+//        addSubview(label)
+//        addSubview(cursor)
+//
+//        clipsToBounds = true
+//
+//        label.textAlignment = .center
+//        label.isUserInteractionEnabled = false
+//
+//        cursor.isHidden = true
+//
+//        UIView.animateKeyframes(
+//            withDuration: 1.6,
+//            delay: 0.8,
+//            options: [.repeat],
+//            animations: {
+//                UIView.addKeyframe(
+//                    withRelativeStartTime: 0,
+//                    relativeDuration: 0.2,
+//                    animations: {
+//                        self.cursor.alpha = 0
+//                })
+//                UIView.addKeyframe(
+//                    withRelativeStartTime: 0.8,
+//                    relativeDuration: 0.2,
+//                    animations: {
+//                        self.cursor.alpha = 1
+//                })
+//        },
+//            completion: nil
+//        )
+//    }
+//
+//    required init?(coder aDecoder: NSCoder) {
+//        fatalError("init(coder:) has not been implemented")
+//    }
+//
+//    override func layoutSubviews() {
+//        super.layoutSubviews()
+//        label.frame = bounds
+//
+//        let width: CGFloat = 2
+//        let height: CGFloat = bounds.height * 0.6
+//
+//        cursor.frame = CGRect(
+//            x: (bounds.width - width) / 2,
+//            y: (bounds.height - height) / 2,
+//            width: width,
+//            height: height
+//        )
+//
+//    }
+//}
+
 class ViewController: UIViewController {
     
+    // default item
     let pinCodeInputView: PinCodeInputView = .init(digit: 6)
+    
+    // custom item
+//    let pinCodeInputView: PinCodeInputView = .init(_items: (0..<6).map { _ in CustomItem() } )
+
     let enterButton = UIButton()
 
     override func viewDidLoad() {
