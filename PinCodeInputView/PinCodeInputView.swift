@@ -102,7 +102,6 @@ public class PinCodeInputView: UIControl, UITextInputTraits, UIKeyInput {
     
     @objc
     private func didTap() {
-        updateCursor()
         becomeFirstResponder()
     }
     
@@ -116,10 +115,10 @@ public class PinCodeInputView: UIControl, UITextInputTraits, UIKeyInput {
                 item.text = nil
             }
         }
-        updateCursor()
+        showCursor()
     }
     
-    private func updateCursor() {
+    private func showCursor() {
         
         let cursorPosition = text.count
         items.enumerated().forEach { (index, item) in
@@ -163,6 +162,12 @@ public class PinCodeInputView: UIControl, UITextInputTraits, UIKeyInput {
     public var enablesReturnKeyAutomatically = true
     
     // MARK: - UIResponder
+    
+    @discardableResult
+    override public func becomeFirstResponder() -> Bool {
+        showCursor()
+        return super.becomeFirstResponder()
+    }
     
     override public var canBecomeFirstResponder: Bool {
         return true
