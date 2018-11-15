@@ -8,7 +8,7 @@
 
 import UIKit
 
-public class PinCodeInputView: UIControl, UITextInputTraits, UIKeyInput {
+public class PinCodeInputView<T: UIView & ItemableType>: UIControl, UITextInputTraits, UIKeyInput {
     
     // MARK: - Properties
     
@@ -31,39 +31,74 @@ public class PinCodeInputView: UIControl, UITextInputTraits, UIKeyInput {
     
     private let digit: Int
     private var changeTextHandler: ((String) -> ())? = nil
-    private let items: [ItemType & UIView]
     private let stackView: UIStackView = .init()
+    private var items: [ContainerItem<T>] = []
+    
+    private let itemFactory: () -> UIView
+    
+    
+    class ContainerItem<T: UIView & ItemableType>: UIView {
+        
+        let surface: UIView = .init()
+        var item: T
+        
+        init(item: T) {
+            
+            self.item = item
+            
+            super.init(frame: .zero)
+
+            addSubview(item)
+            addSubview(surface)
+            
+            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTap))
+            surface.addGestureRecognizer(tapGesture)
+        }
+        
+        required init?(coder aDecoder: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
+        }
+        
+        override func layoutSubviews() {
+            super.layoutSubviews()
+            
+            item.frame = bounds
+            surface.frame = bounds
+        }
+        
+        private var didTapHandler: (() -> ())?
+        
+        func setHandler(handler: @escaping () -> ()) {
+            didTapHandler = handler
+        }
+        
+        @objc private func didTap() {
+            if let handler = didTapHandler {
+                handler()
+            }
+        }
+    }
     
     // MARK: - Initializers
     
-//    public init(_items: [ItemType & UIView]) {
-//
-//        self.digit = _items.count
-//        self.items = _items
-//
-//        super.init(frame: .zero)
-//
-//        items.enumerated().forEach { (index, item) in
-//            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTap))
-//            item.addGestureRecognizer(tapGesture)
-//            stackView.addArrangedSubview(item)
-//        }
-//        stackView.axis = .horizontal
-//        stackView.distribution = .fillEqually
-//    }
-    
-    public init(digit: Int) {
+    public init(digit: Int, itemFactory: @escaping () -> T) {
         
         self.digit = digit
-        self.items = (0..<digit).map { _ in ItemView() }
+        self.itemFactory = itemFactory
         
         super.init(frame: .zero)
         
+        self.items = (0..<digit).map { _ in
+            let item = ContainerItem(item: itemFactory())
+            item.setHandler {
+                self.becomeFirstResponder
+            }
+            return item
+        }
+
         addSubview(stackView)
-        
-        items.enumerated().forEach { (index, item) in
-            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTap))
-            item.addGestureRecognizer(tapGesture)
+
+        items.forEach { item in
             stackView.addArrangedSubview(item)
         }
         stackView.axis = .horizontal
@@ -95,24 +130,19 @@ public class PinCodeInputView: UIControl, UITextInputTraits, UIKeyInput {
         self.changeTextHandler = changeTextHandler
     }
         
-    public func set(appearance: Appearance) {
-        items.forEach { $0.set(appearance: appearance) }
-        stackView.spacing = appearance.spacing
-    }
-    
-    @objc
-    private func didTap() {
-        becomeFirstResponder()
-    }
+//    public func set(appearance: Appearance) {
+//        items.forEach { $0.set(appearance: appearance) }
+//        stackView.spacing = appearance.spacing
+//    }
     
     private func updateText() {
         
         items.enumerated().forEach { (index, item) in
             if (0..<text.count).contains(index) {
                 let _index = text.index(text.startIndex, offsetBy: index)
-                item.text = text[_index]
+                item.item.text = text[_index]
             } else {
-                item.text = nil
+                item.item.text = nil
             }
         }
         showCursor()
@@ -121,14 +151,16 @@ public class PinCodeInputView: UIControl, UITextInputTraits, UIKeyInput {
     private func showCursor() {
         
         let cursorPosition = text.count
-        items.enumerated().forEach { (index, item) in
-            item.isHiddenCursor = (index == cursorPosition) ? false : true
+        items.enumerated().forEach { (arg) in
+            
+            let (index, item) = arg
+            item.item.isHiddenCursor = (index == cursorPosition) ? false : true
         }
     }
     
     private func hiddenCursor() {
         
-        items.forEach { $0.isHiddenCursor = true }
+        items.forEach { $0.item.isHiddenCursor = true }
     }
     
     // MARK: - UIKeyInput
@@ -212,15 +244,13 @@ public struct Appearance {
     }
 }
 
-public protocol ItemType: class {
+
+public protocol ItemableType {
     var text: Character? { get set }
     var isHiddenCursor: Bool { get set }
-    var label: UILabel { get }
-    var cursor: UIView { get }
-    func set(appearance: Appearance)
 }
 
-public class ItemView: UIView, ItemType {
+public class ItemView: UIView, ItemableType {
     
     public var text: Character? = nil {
         didSet {
@@ -241,7 +271,7 @@ public class ItemView: UIView, ItemType {
     public let label: UILabel = .init()
     public let cursor: UIView = .init()
     
-    init() {
+    public init() {
         
         super.init(frame: .zero)
         

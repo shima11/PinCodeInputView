@@ -90,7 +90,11 @@ import PinCodeInputView
 class ViewController: UIViewController {
     
     // default item
-    let pinCodeInputView: PinCodeInputView = .init(digit: 6)
+    let pinCodeInputView: PinCodeInputView<ItemView> = .init(
+        digit: 6,
+        itemFactory: {
+        return ItemView()
+    })
     
     // custom item
 //    let pinCodeInputView: PinCodeInputView = .init(_items: (0..<6).map { _ in CustomItem() } )
@@ -130,16 +134,16 @@ class ViewController: UIViewController {
         view.addSubview(pinCodeInputView)
         pinCodeInputView.frame = CGRect(x: 0, y: 0, width: view.bounds.width - 56, height: 80)
         pinCodeInputView.center = view.center
-        pinCodeInputView.set(
-            appearance: .init(
-                font: .systemFont(ofSize: 28, weight: .bold),
-                textColor: .white,
-                backgroundColor: UIColor.black.withAlphaComponent(0.3),
-                cursorColor: UIColor(red: 69/255, green: 108/255, blue: 1, alpha: 1),
-                cornerRadius: 8,
-                spacing: 8
-            )
-        )
+//        pinCodeInputView.set(
+//            appearance: .init(
+//                font: .systemFont(ofSize: 28, weight: .bold),
+//                textColor: .white,
+//                backgroundColor: UIColor.black.withAlphaComponent(0.3),
+//                cursorColor: UIColor(red: 69/255, green: 108/255, blue: 1, alpha: 1),
+//                cornerRadius: 8,
+//                spacing: 8
+//            )
+//        )
         
         enterButton.frame = CGRect(x: 0, y: 0, width: 240, height: 60)
         enterButton.center = CGPoint(x: view.center.x, y: view.center.y + 220)
