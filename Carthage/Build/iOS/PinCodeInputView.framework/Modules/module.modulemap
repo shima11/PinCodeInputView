@@ -1,0 +1,11 @@
+framework module PinCodeInputView {
+  umbrella header "PinCodeInputView.h"
+
+  export *
+  module * { export * }
+}
+
+module PinCodeInputView.Swift {
+    header "PinCodeInputView-Swift.h"
+    requires objc
+}
