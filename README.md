@@ -1,6 +1,8 @@
 # PinCodeInputView
 TextView for entering pin code. 
 
+![](demo.png)
+
 ![](demo.gif)
 
 ## Usage
