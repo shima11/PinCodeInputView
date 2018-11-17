@@ -10,7 +10,7 @@ import UIKit
 import PinCodeInputView
 
 
-//class CustomItem: UIView, ItemType {
+//class CustomItemView: UIView, ItemType {
 //
 //    var text: Character? = nil
 //
@@ -96,13 +96,19 @@ class ViewController: UIViewController {
         return ItemView()
     })
     
-    // custom item
-//    let pinCodeInputView: PinCodeInputView = .init(_items: (0..<6).map { _ in CustomItem() } )
+    let titleLabel = UILabel()
 
-    let enterButton = UIButton()
-
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        view.addSubview(titleLabel)
+        view.addSubview(pinCodeInputView)
+
+        view.backgroundColor = .black
 
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tap))
         view.addGestureRecognizer(tapGesture)
@@ -116,45 +122,29 @@ class ViewController: UIViewController {
                 object: nil
         )
         
-        let titleLabel = UILabel()
         titleLabel.text = "Enter a PIN Code"
-        titleLabel.font = UIFont.systemFont(ofSize: 32, weight: .bold)
-        titleLabel.textColor = .darkGray
-        view.addSubview(titleLabel)
+        titleLabel.font = UIFont.systemFont(ofSize: 24, weight: .bold)
+        titleLabel.textColor = UIColor.lightText
         titleLabel.frame = CGRect(x: 0, y: 0, width: view.bounds.width - 56, height: 60)
         titleLabel.center = CGPoint(x: view.center.x, y: view.center.y - 94)
-        
-        pinCodeInputView.set(changeTextHandler: { [weak self] text in
-            if self?.pinCodeInputView.isFilled == true {
-                self?.enterButton.backgroundColor = .darkGray
-            } else {
-                self?.enterButton.backgroundColor = .lightGray
-            }
+
+        pinCodeInputView.set(changeTextHandler: { text in
+            print(text)
         })
-        view.addSubview(pinCodeInputView)
         pinCodeInputView.frame = CGRect(x: 0, y: 0, width: view.bounds.width - 56, height: 80)
         pinCodeInputView.center = view.center
-//        pinCodeInputView.set(
-//            appearance: .init(
-//                font: .systemFont(ofSize: 28, weight: .bold),
-//                textColor: .white,
-//                backgroundColor: UIColor.black.withAlphaComponent(0.3),
-//                cursorColor: UIColor(red: 69/255, green: 108/255, blue: 1, alpha: 1),
-//                cornerRadius: 8,
-//                spacing: 8
-//            )
-//        )
         
-        enterButton.frame = CGRect(x: 0, y: 0, width: 240, height: 60)
-        enterButton.center = CGPoint(x: view.center.x, y: view.center.y + 220)
-        enterButton.setTitle("Enter", for: .normal)
-        enterButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .bold)
-        enterButton.layer.cornerRadius = 30
-        enterButton.clipsToBounds = true
-        enterButton.backgroundColor = .lightGray
-        enterButton.setTitleColor(.white, for: .normal)
-        view.addSubview(enterButton)
-
+        pinCodeInputView.set(
+            appearance: .init(
+                itemSize: CGSize(width: 20, height: 30),
+                font: .systemFont(ofSize: 28, weight: .bold),
+                textColor: .white,
+                backgroundColor: UIColor.white.withAlphaComponent(0.3),
+                cursorColor: UIColor(red: 69/255, green: 108/255, blue: 1, alpha: 1),
+                cornerRadius: 8,
+                spacing: 8
+            )
+        )
     }
     
     @objc func didBecameActive() {

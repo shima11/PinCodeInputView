@@ -36,52 +36,12 @@ public class PinCodeInputView<T: UIView & ItemableType>: UIControl, UITextInputT
     
     private let itemFactory: () -> UIView
     
-    
-    class ContainerItem<T: UIView & ItemableType>: UIView {
-        
-        let surface: UIView = .init()
-        var item: T
-        
-        init(item: T) {
-            
-            self.item = item
-            
-            super.init(frame: .zero)
-
-            addSubview(item)
-            addSubview(surface)
-            
-            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTap))
-            surface.addGestureRecognizer(tapGesture)
-        }
-        
-        required init?(coder aDecoder: NSCoder) {
-            fatalError("init(coder:) has not been implemented")
-        }
-        
-        override func layoutSubviews() {
-            super.layoutSubviews()
-            
-            item.frame = bounds
-            surface.frame = bounds
-        }
-        
-        private var didTapHandler: (() -> ())?
-        
-        func setHandler(handler: @escaping () -> ()) {
-            didTapHandler = handler
-        }
-        
-        @objc private func didTap() {
-            if let handler = didTapHandler {
-                handler()
-            }
-        }
-    }
-    
     // MARK: - Initializers
     
-    public init(digit: Int, itemFactory: @escaping () -> T) {
+    public init(
+        digit: Int,
+        itemFactory: @escaping (() -> T)
+        ) {
         
         self.digit = digit
         self.itemFactory = itemFactory
@@ -91,13 +51,14 @@ public class PinCodeInputView<T: UIView & ItemableType>: UIControl, UITextInputT
         self.items = (0..<digit).map { _ in
             let item = ContainerItem(item: itemFactory())
             item.setHandler {
-                self.becomeFirstResponder
+                self.showCursor()
+                self.becomeFirstResponder()
             }
             return item
         }
-
+        
         addSubview(stackView)
-
+        
         items.forEach { item in
             stackView.addArrangedSubview(item)
         }
@@ -113,11 +74,12 @@ public class PinCodeInputView<T: UIView & ItemableType>: UIControl, UITextInputT
 
     override public func layoutSubviews() {
         super.layoutSubviews()
+        
         stackView.frame = bounds
     }
     
     override public var intrinsicContentSize: CGSize {
-        return self.bounds.size
+        return bounds.size
     }
 
     public func set(text: String) {
@@ -130,10 +92,11 @@ public class PinCodeInputView<T: UIView & ItemableType>: UIControl, UITextInputT
         self.changeTextHandler = changeTextHandler
     }
         
-//    public func set(appearance: Appearance) {
-//        items.forEach { $0.set(appearance: appearance) }
-//        stackView.spacing = appearance.spacing
-//    }
+    public func set(appearance: Appearance) {
+        items.forEach { $0.item.set(appearance: appearance) }
+        stackView.spacing = appearance.spacing
+//        stackView.bounds = CGRect(x: 0, y: 0, width: (appearance.itemSize.width * CGFloat(digit)) + (appearance.spacing * CGFloat(digit - 1)), height: appearance.itemSize.height)
+    }
     
     private func updateText() {
         
@@ -213,10 +176,14 @@ public class PinCodeInputView<T: UIView & ItemableType>: UIControl, UITextInputT
     
 }
 
+
+// TODO: itemのappearanceは各itemに任せる。PincodeInputViewとしてはspacingとか全体に関するものだけ提供
+
 public struct Appearance {
     
     // struct ItemAppearance
     
+    public let itemSize: CGSize
     public let font: UIFont
     public let textColor: UIColor
     public let backgroundColor: UIColor
@@ -228,6 +195,7 @@ public struct Appearance {
     public let spacing: CGFloat
     
     public init(
+        itemSize: CGSize,
         font: UIFont,
         textColor: UIColor,
         backgroundColor: UIColor,
@@ -235,6 +203,8 @@ public struct Appearance {
         cornerRadius: CGFloat,
         spacing: CGFloat
         ) {
+        
+        self.itemSize = itemSize
         self.font = font
         self.textColor = textColor
         self.backgroundColor = backgroundColor
@@ -244,10 +214,51 @@ public struct Appearance {
     }
 }
 
+private class ContainerItem<T: UIView & ItemableType>: UIView {
+    
+    var item: T
+    private let surface: UIView = .init()
+    private var didTapHandler: (() -> ())?
+
+    init(item: T) {
+        
+        self.item = item
+        
+        super.init(frame: .zero)
+        
+        addSubview(item)
+        addSubview(surface)
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTap))
+        surface.addGestureRecognizer(tapGesture)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        item.frame = bounds
+        surface.frame = bounds
+    }
+    
+    func setHandler(handler: @escaping () -> ()) {
+        didTapHandler = handler
+    }
+    
+    @objc private func didTap() {
+        if let handler = didTapHandler {
+            handler()
+        }
+    }
+}
 
 public protocol ItemableType {
     var text: Character? { get set }
     var isHiddenCursor: Bool { get set }
+    func set(appearance: Appearance)
 }
 
 public class ItemView: UIView, ItemableType {
@@ -328,10 +339,12 @@ public class ItemView: UIView, ItemableType {
     }
     
     public func set(appearance: Appearance) {
+        bounds.size = appearance.itemSize
         label.font = appearance.font
         label.textColor = appearance.textColor
         cursor.backgroundColor = appearance.cursorColor
         backgroundColor = appearance.backgroundColor
         layer.cornerRadius = appearance.cornerRadius
+        layoutIfNeeded()
     }
 }
