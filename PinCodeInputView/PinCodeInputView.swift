@@ -52,7 +52,7 @@ public class PinCodeInputView<T: UIView & ItemType>: UIControl, UITextInputTrait
         super.init(frame: .zero)
         
         self.items = (0..<digit).map { _ in
-            let item = ContainerItemView(item: itemFactory())
+            let item = ContainerItemView(itemView: itemFactory())
             item.setHandler {
                 self.showCursor()
                 self.becomeFirstResponder()
@@ -107,7 +107,7 @@ public class PinCodeInputView<T: UIView & ItemType>: UIControl, UITextInputTrait
     
     public func set(appearance: ItemAppearance) {
         self.appearance = appearance
-        items.forEach { $0.item.set(appearance: appearance) }
+        items.forEach { $0.itemView.set(appearance: appearance) }
     }
     
     private func updateText() {
@@ -115,9 +115,9 @@ public class PinCodeInputView<T: UIView & ItemType>: UIControl, UITextInputTrait
         items.enumerated().forEach { (index, item) in
             if (0..<text.count).contains(index) {
                 let _index = text.index(text.startIndex, offsetBy: index)
-                item.item.text = text[_index]
+                item.itemView.text = text[_index]
             } else {
-                item.item.text = nil
+                item.itemView.text = nil
             }
         }
         showCursor()
@@ -129,13 +129,13 @@ public class PinCodeInputView<T: UIView & ItemType>: UIControl, UITextInputTrait
         items.enumerated().forEach { (arg) in
             
             let (index, item) = arg
-            item.item.isHiddenCursor = (index == cursorPosition) ? false : true
+            item.itemView.isHiddenCursor = (index == cursorPosition) ? false : true
         }
     }
     
     private func hiddenCursor() {
         
-        items.forEach { $0.item.isHiddenCursor = true }
+        items.forEach { $0.itemView.isHiddenCursor = true }
     }
     
     // MARK: - UIKeyInput
@@ -190,21 +190,21 @@ public class PinCodeInputView<T: UIView & ItemType>: UIControl, UITextInputTrait
 
     private class ContainerItemView<T: UIView & ItemType>: UIView {
         
-        var item: T
-        private let surface: UIView = .init()
+        var itemView: T
+        private let surfaceView: UIView = .init()
         private var didTapHandler: (() -> ())?
         
-        init(item: T) {
+        init(itemView: T) {
             
-            self.item = item
+            self.itemView = itemView
             
             super.init(frame: .zero)
             
-            addSubview(item)
-            addSubview(surface)
+            addSubview(itemView)
+            addSubview(surfaceView)
             
             let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTap))
-            surface.addGestureRecognizer(tapGesture)
+            surfaceView.addGestureRecognizer(tapGesture)
         }
         
         required init?(coder aDecoder: NSCoder) {
@@ -214,8 +214,8 @@ public class PinCodeInputView<T: UIView & ItemType>: UIControl, UITextInputTrait
         override func layoutSubviews() {
             super.layoutSubviews()
             
-            item.frame = bounds
-            surface.frame = bounds
+            itemView.frame = bounds
+            surfaceView.frame = bounds
         }
         
         func setHandler(handler: @escaping () -> ()) {

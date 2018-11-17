@@ -21,8 +21,8 @@ ItemView is Appearance. You can customize ItemView.
 
 ```swift
 private class ContainerItemView<T: UIView & ItemType>: UIView {
-    var item: T
-    private let surface: UIView = .init()
+    var itemView: T
+    private let surfaceView: UIView = .init()
     private var didTapHandler: (() -> ())?
 }
 ```
