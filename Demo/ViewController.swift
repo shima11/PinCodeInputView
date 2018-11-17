@@ -10,92 +10,196 @@ import UIKit
 import PinCodeInputView
 
 
-//class CustomItemView: UIView, ItemType {
-//
-//    var text: Character? = nil
-//
-//    var isHiddenCursor: Bool = false
-//
-//    var label: UILabel = .init()
-//
-//    var cursor: UIView = .init()
-//
-//    func set(appearance: Appearance) {
-//
-//        label.font = appearance.font
-//        label.textColor = appearance.textColor
-//        cursor.backgroundColor = appearance.cursorColor
-//        backgroundColor = appearance.backgroundColor
-//        layer.cornerRadius = appearance.cornerRadius
-//        layoutIfNeeded()
-//    }
-//
-//    init() {
-//
-//        super.init(frame: .zero)
-//
-//        addSubview(label)
-//        addSubview(cursor)
-//
-//        clipsToBounds = true
-//
-//        label.textAlignment = .center
-//        label.isUserInteractionEnabled = false
-//
-//        cursor.isHidden = true
-//
-//        UIView.animateKeyframes(
-//            withDuration: 1.6,
-//            delay: 0.8,
-//            options: [.repeat],
-//            animations: {
-//                UIView.addKeyframe(
-//                    withRelativeStartTime: 0,
-//                    relativeDuration: 0.2,
-//                    animations: {
-//                        self.cursor.alpha = 0
-//                })
-//                UIView.addKeyframe(
-//                    withRelativeStartTime: 0.8,
-//                    relativeDuration: 0.2,
-//                    animations: {
-//                        self.cursor.alpha = 1
-//                })
-//        },
-//            completion: nil
-//        )
-//    }
-//
-//    required init?(coder aDecoder: NSCoder) {
-//        fatalError("init(coder:) has not been implemented")
-//    }
-//
-//    override func layoutSubviews() {
-//        super.layoutSubviews()
-//        label.frame = bounds
-//
-//        let width: CGFloat = 2
-//        let height: CGFloat = bounds.height * 0.6
-//
-//        cursor.frame = CGRect(
-//            x: (bounds.width - width) / 2,
-//            y: (bounds.height - height) / 2,
-//            width: width,
-//            height: height
-//        )
-//
-//    }
-//}
+final class UnderlineItemView: UIView, ItemableType {
+
+    var text: Character? = nil {
+        didSet {
+            guard let text = text else {
+                label.text = nil
+                return
+            }
+            label.text = String(text)
+        }
+    }
+
+    var isHiddenCursor: Bool = false
+
+    private let label: UILabel = .init()
+    private let underLineView: UIView = .init()
+
+    init() {
+
+        super.init(frame: .zero)
+
+        addSubview(label)
+        addSubview(underLineView)
+
+        clipsToBounds = true
+
+        label.textAlignment = .center
+        label.isUserInteractionEnabled = false
+        
+        underLineView.backgroundColor = .lightText
+
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        label.frame = bounds
+
+        let width: CGFloat = bounds.width
+        let height: CGFloat = 2
+        
+        underLineView.frame = CGRect(
+            x: (bounds.width - width) / 2,
+            y: (bounds.height - height),
+            width: width,
+            height: height
+        )
+    }
+    
+    func set(appearance: Appearance) {
+        
+        label.font = appearance.font
+        label.textColor = appearance.textColor
+        layoutIfNeeded()
+    }
+
+}
+
+final class CircleItemView: UIView, ItemableType {
+    
+    var text: Character? = nil {
+        didSet {
+            guard let text = text else {
+                label.text = nil
+                return
+            }
+            label.text = String(text)
+        }
+    }
+    
+    var isHiddenCursor: Bool = false
+    
+    private let label: UILabel = .init()
+    
+    init() {
+        
+        super.init(frame: .zero)
+        
+        addSubview(label)
+        
+        clipsToBounds = true
+        
+        label.textAlignment = .center
+        label.isUserInteractionEnabled = false
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        let length = min(bounds.width, bounds.height)
+        frame = CGRect(x: 0, y: 0, width: length, height: length)
+        layer.cornerRadius = length / 2
+        label.frame = bounds
+    }
+    
+    func set(appearance: Appearance) {
+        
+        label.font = appearance.font
+        label.textColor = appearance.textColor
+        
+        layer.borderColor = appearance.textColor.cgColor
+        layer.borderWidth = 1
+        
+        layoutIfNeeded()
+    }
+    
+}
+
+final class PasswordItemView: UIView, ItemableType {
+    
+    var text: Character? = nil {
+        didSet {
+            guard let _ = text else {
+                backgroundColor = .clear
+                return
+            }
+            backgroundColor = appearance?.textColor
+        }
+    }
+    
+    var isHiddenCursor: Bool = false
+    private var appearance: Appearance?
+    
+    init() {
+        
+        super.init(frame: .zero)
+        
+        clipsToBounds = true
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        let length = min(bounds.width, bounds.height)
+        frame = CGRect(x: 0, y: 0, width: length, height: length)
+        layer.cornerRadius = length / 2
+    }
+    
+    func set(appearance: Appearance) {
+        self.appearance = appearance
+        
+        layer.borderColor = appearance.textColor.cgColor
+        layer.borderWidth = 1
+        
+        layoutIfNeeded()
+    }
+    
+}
+
+
 
 class ViewController: UIViewController {
-    
-    // default item
-    let pinCodeInputView: PinCodeInputView<ItemView> = .init(
+
+    // default item view
+//    let pinCodeInputView: PinCodeInputView<ItemView> = .init(
+//        digit: 6,
+//        itemFactory: {
+//            return ItemView()
+//    })
+
+    // customize item view
+//    let pinCodeInputView: PinCodeInputView<UnderlineItemView> = .init(
+//        digit: 6,
+//        itemFactory: {
+//        return UnderlineItemView()
+//    })
+
+//    let pinCodeInputView: PinCodeInputView<CircleItemView> = .init(
+//        digit: 6,
+//        itemFactory: {
+//            return CircleItemView()
+//    })
+
+    let pinCodeInputView: PinCodeInputView<PasswordItemView> = .init(
         digit: 6,
         itemFactory: {
-        return ItemView()
+            return PasswordItemView()
     })
-    
+
     let titleLabel = UILabel()
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -113,27 +217,17 @@ class ViewController: UIViewController {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tap))
         view.addGestureRecognizer(tapGesture)
         
-        NotificationCenter
-            .default
-            .addObserver(
-                self,
-                selector: #selector(didBecameActive),
-                name: UIApplication.didBecomeActiveNotification,
-                object: nil
-        )
-        
         titleLabel.text = "Enter a PIN Code"
         titleLabel.font = UIFont.systemFont(ofSize: 24, weight: .bold)
         titleLabel.textColor = UIColor.lightText
         titleLabel.frame = CGRect(x: 0, y: 0, width: view.bounds.width - 56, height: 60)
         titleLabel.center = CGPoint(x: view.center.x, y: view.center.y - 94)
 
+        pinCodeInputView.frame = CGRect(x: 0, y: 0, width: view.bounds.width - 56, height: 80)
+        pinCodeInputView.center = view.center
         pinCodeInputView.set(changeTextHandler: { text in
             print(text)
         })
-        pinCodeInputView.frame = CGRect(x: 0, y: 0, width: view.bounds.width - 56, height: 80)
-        pinCodeInputView.center = view.center
-        
         pinCodeInputView.set(
             appearance: .init(
                 itemSize: CGSize(width: 20, height: 30),
@@ -145,6 +239,7 @@ class ViewController: UIViewController {
                 spacing: 8
             )
         )
+        
     }
     
     @objc func didBecameActive() {
