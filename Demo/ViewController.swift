@@ -9,171 +9,6 @@
 import UIKit
 import PinCodeInputView
 
-
-final class UnderlineItemView: UIView, ItemType {
-
-    var text: Character? = nil {
-        didSet {
-            guard let text = text else {
-                label.text = nil
-                return
-            }
-            label.text = String(text)
-        }
-    }
-
-    var isHiddenCursor: Bool = false
-
-    private let label: UILabel = .init()
-    private let underLineView: UIView = .init()
-
-    init() {
-
-        super.init(frame: .zero)
-
-        addSubview(label)
-        addSubview(underLineView)
-
-        clipsToBounds = true
-
-        label.textAlignment = .center
-        label.isUserInteractionEnabled = false
-        
-        underLineView.backgroundColor = .lightText
-
-    }
-
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        label.frame = bounds
-
-        let width: CGFloat = bounds.width
-        let height: CGFloat = 2
-        
-        underLineView.frame = CGRect(
-            x: (bounds.width - width) / 2,
-            y: (bounds.height - height),
-            width: width,
-            height: height
-        )
-    }
-    
-    func set(appearance: Appearance) {
-        
-        label.font = appearance.font
-        label.textColor = appearance.textColor
-        layoutIfNeeded()
-    }
-
-}
-
-final class CircleItemView: UIView, ItemType {
-    
-    var text: Character? = nil {
-        didSet {
-            guard let text = text else {
-                label.text = nil
-                return
-            }
-            label.text = String(text)
-        }
-    }
-    
-    var isHiddenCursor: Bool = false
-    
-    private let label: UILabel = .init()
-    
-    init() {
-        
-        super.init(frame: .zero)
-        
-        addSubview(label)
-        
-        clipsToBounds = true
-        
-        label.textAlignment = .center
-        label.isUserInteractionEnabled = false
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        let length = min(bounds.width, bounds.height)
-        frame = CGRect(x: 0, y: 0, width: length, height: length)
-        layer.cornerRadius = length / 2
-        label.frame = bounds
-    }
-    
-    func set(appearance: Appearance) {
-        
-        label.font = appearance.font
-        label.textColor = appearance.textColor
-        
-        layer.borderColor = appearance.textColor.cgColor
-        layer.borderWidth = 1
-        
-        layoutIfNeeded()
-    }
-    
-}
-
-final class PasswordItemView: UIView, ItemType {
-    
-    var text: Character? = nil {
-        didSet {
-            guard let _ = text else {
-                backgroundColor = .clear
-                return
-            }
-            backgroundColor = appearance?.textColor
-        }
-    }
-    
-    var isHiddenCursor: Bool = false
-    private var appearance: Appearance?
-    
-    init() {
-        
-        super.init(frame: .zero)
-        
-        clipsToBounds = true
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        guard let appearance = appearance else { return }
-        let length = min(appearance.itemSize.width, appearance.itemSize.height)
-        frame = CGRect(x: 0, y: 0, width: length, height: length)
-        layer.cornerRadius = length / 2
-    }
-    
-    func set(appearance: Appearance) {
-        self.appearance = appearance
-        
-        bounds.size = appearance.itemSize
-        layer.borderColor = appearance.textColor.cgColor
-        layer.borderWidth = 1
-        
-        layoutIfNeeded()
-    }
-    
-}
-
-
-
 class ViewController: UIViewController {
 
     // default item view
@@ -184,26 +19,31 @@ class ViewController: UIViewController {
             return ItemView()
     })
 
-    // customize item view
+    // customize item view (underline)
 //    let pinCodeInputView: PinCodeInputView<UnderlineItemView> = .init(
 //        digit: 6,
+//        itemSpacing: 8,
 //        itemFactory: {
 //        return UnderlineItemView()
 //    })
 
+    // customize item view (circle)
 //    let pinCodeInputView: PinCodeInputView<CircleItemView> = .init(
 //        digit: 6,
+//        itemSpacing: 8,
 //        itemFactory: {
 //            return CircleItemView()
 //    })
 
+    // customize item view (password)
 //    let pinCodeInputView: PinCodeInputView<PasswordItemView> = .init(
 //        digit: 4,
+//        itemSpacing: 24,
 //        itemFactory: {
 //            return PasswordItemView()
 //    })
 
-    let titleLabel = UILabel()
+    private let titleLabel = UILabel()
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
@@ -240,6 +80,15 @@ class ViewController: UIViewController {
                 cursorColor: UIColor(red: 69/255, green: 108/255, blue: 1, alpha: 1),
                 cornerRadius: 8
             )
+        )
+        
+        NotificationCenter
+            .default
+            .addObserver(
+                self,
+                selector: #selector(didBecameActive),
+                name: UIApplication.didBecomeActiveNotification,
+                object: nil
         )
         
     }
