@@ -8,7 +8,7 @@
 
 import UIKit
 
-public class PinCodeInputView<T: UIView & ItemableType>: UIControl, UITextInputTraits, UIKeyInput {
+public class PinCodeInputView<T: UIView & ItemType>: UIControl, UITextInputTraits, UIKeyInput {
     
     // MARK: - Properties
     
@@ -32,7 +32,7 @@ public class PinCodeInputView<T: UIView & ItemableType>: UIControl, UITextInputT
     private let digit: Int
     private var changeTextHandler: ((String) -> ())? = nil
     private let stackView: UIStackView = .init()
-    private var items: [ContainerItem<T>] = []
+    private var items: [ContainerItemView<T>] = []
     private let itemFactory: () -> UIView
     private var appearance: Appearance?
 
@@ -49,7 +49,7 @@ public class PinCodeInputView<T: UIView & ItemableType>: UIControl, UITextInputT
         super.init(frame: .zero)
         
         self.items = (0..<digit).map { _ in
-            let item = ContainerItem(item: itemFactory())
+            let item = ContainerItemView(item: itemFactory())
             item.setHandler {
                 self.showCursor()
                 self.becomeFirstResponder()
@@ -224,7 +224,7 @@ public struct Appearance {
     }
 }
 
-private class ContainerItem<T: UIView & ItemableType>: UIView {
+private class ContainerItemView<T: UIView & ItemType>: UIView {
     
     var item: T
     private let surface: UIView = .init()
@@ -265,13 +265,15 @@ private class ContainerItem<T: UIView & ItemableType>: UIView {
     }
 }
 
-public protocol ItemableType {
+public protocol ItemType {
     var text: Character? { get set }
     var isHiddenCursor: Bool { get set }
     func set(appearance: Appearance)
 }
 
-public class ItemView: UIView, ItemableType {
+
+// Default Item View
+public class ItemView: UIView, ItemType {
     
     public var text: Character? = nil {
         didSet {

@@ -10,7 +10,7 @@ import UIKit
 import PinCodeInputView
 
 
-final class UnderlineItemView: UIView, ItemableType {
+final class UnderlineItemView: UIView, ItemType {
 
     var text: Character? = nil {
         didSet {
@@ -71,7 +71,7 @@ final class UnderlineItemView: UIView, ItemableType {
 
 }
 
-final class CircleItemView: UIView, ItemableType {
+final class CircleItemView: UIView, ItemType {
     
     var text: Character? = nil {
         didSet {
@@ -125,7 +125,7 @@ final class CircleItemView: UIView, ItemableType {
     
 }
 
-final class PasswordItemView: UIView, ItemableType {
+final class PasswordItemView: UIView, ItemType {
     
     var text: Character? = nil {
         didSet {
@@ -154,8 +154,8 @@ final class PasswordItemView: UIView, ItemableType {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-//        let length = min(bounds.width, bounds.height)
-        let length = appearance?.itemSize.width ?? bounds.width
+        guard let appearance = appearance else { return }
+        let length = min(appearance.itemSize.width, appearance.itemSize.height)
         frame = CGRect(x: 0, y: 0, width: length, height: length)
         layer.cornerRadius = length / 2
     }
