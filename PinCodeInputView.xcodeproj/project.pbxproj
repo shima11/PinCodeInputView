@@ -17,6 +17,12 @@
 		D49EF023219193DA00FB4379 /* String+Validation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D49EF021219193DA00FB4379 /* String+Validation.swift */; };
 		D49EF0252191940900FB4379 /* PinCodeInputView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D49EEFF72191930200FB4379 /* PinCodeInputView.framework */; };
 		D49EF02C2192ACC000FB4379 /* PinCodeInputView.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D49EEFF72191930200FB4379 /* PinCodeInputView.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D4F61BB621A02BF800E83EED /* ItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F61BB521A02BF800E83EED /* ItemView.swift */; };
+		D4F61BB821A02C2700E83EED /* ItemType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F61BB721A02C2700E83EED /* ItemType.swift */; };
+		D4F61BBA21A02C4600E83EED /* ItemAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F61BB921A02C4600E83EED /* ItemAppearance.swift */; };
+		D4F61BBC21A02DAF00E83EED /* UnderlineItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F61BBB21A02DAF00E83EED /* UnderlineItemView.swift */; };
+		D4F61BBE21A02DCA00E83EED /* CircleItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F61BBD21A02DCA00E83EED /* CircleItemView.swift */; };
+		D4F61BC021A02DE800E83EED /* PasswordItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F61BBF21A02DE800E83EED /* PasswordItemView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,6 +63,12 @@
 		D49EF020219193DA00FB4379 /* PinCodeInputView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PinCodeInputView.swift; sourceTree = "<group>"; };
 		D49EF021219193DA00FB4379 /* String+Validation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Validation.swift"; sourceTree = "<group>"; };
 		D49EF06821931E0400FB4379 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		D4F61BB521A02BF800E83EED /* ItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemView.swift; sourceTree = "<group>"; };
+		D4F61BB721A02C2700E83EED /* ItemType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemType.swift; sourceTree = "<group>"; };
+		D4F61BB921A02C4600E83EED /* ItemAppearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemAppearance.swift; sourceTree = "<group>"; };
+		D4F61BBB21A02DAF00E83EED /* UnderlineItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnderlineItemView.swift; sourceTree = "<group>"; };
+		D4F61BBD21A02DCA00E83EED /* CircleItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleItemView.swift; sourceTree = "<group>"; };
+		D4F61BBF21A02DE800E83EED /* PasswordItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordItemView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,6 +115,9 @@
 			children = (
 				D49EEFFA2191930200FB4379 /* PinCodeInputView.h */,
 				D49EF020219193DA00FB4379 /* PinCodeInputView.swift */,
+				D4F61BB921A02C4600E83EED /* ItemAppearance.swift */,
+				D4F61BB721A02C2700E83EED /* ItemType.swift */,
+				D4F61BB521A02BF800E83EED /* ItemView.swift */,
 				D49EF021219193DA00FB4379 /* String+Validation.swift */,
 				D49EEFFB2191930200FB4379 /* Info.plist */,
 			);
@@ -114,6 +129,7 @@
 			children = (
 				D49EF0082191935500FB4379 /* AppDelegate.swift */,
 				D49EF00A2191935500FB4379 /* ViewController.swift */,
+				D4F61BC121A02E8600E83EED /* CustomItemView */,
 				D49EF00C2191935500FB4379 /* Main.storyboard */,
 				D49EF00F2191935700FB4379 /* Assets.xcassets */,
 				D49EF0112191935700FB4379 /* LaunchScreen.storyboard */,
@@ -127,6 +143,16 @@
 			children = (
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		D4F61BC121A02E8600E83EED /* CustomItemView */ = {
+			isa = PBXGroup;
+			children = (
+				D4F61BBB21A02DAF00E83EED /* UnderlineItemView.swift */,
+				D4F61BBF21A02DE800E83EED /* PasswordItemView.swift */,
+				D4F61BBD21A02DCA00E83EED /* CircleItemView.swift */,
+			);
+			path = CustomItemView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -244,7 +270,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				D49EF022219193DA00FB4379 /* PinCodeInputView.swift in Sources */,
+				D4F61BB621A02BF800E83EED /* ItemView.swift in Sources */,
+				D4F61BB821A02C2700E83EED /* ItemType.swift in Sources */,
 				D49EF023219193DA00FB4379 /* String+Validation.swift in Sources */,
+				D4F61BBA21A02C4600E83EED /* ItemAppearance.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -253,7 +282,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				D49EF00B2191935500FB4379 /* ViewController.swift in Sources */,
+				D4F61BBC21A02DAF00E83EED /* UnderlineItemView.swift in Sources */,
 				D49EF0092191935500FB4379 /* AppDelegate.swift in Sources */,
+				D4F61BC021A02DE800E83EED /* PasswordItemView.swift in Sources */,
+				D4F61BBE21A02DCA00E83EED /* CircleItemView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
