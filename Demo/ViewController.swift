@@ -154,7 +154,8 @@ final class PasswordItemView: UIView, ItemableType {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        let length = min(bounds.width, bounds.height)
+//        let length = min(bounds.width, bounds.height)
+        let length = appearance?.itemSize.width ?? bounds.width
         frame = CGRect(x: 0, y: 0, width: length, height: length)
         layer.cornerRadius = length / 2
     }
@@ -162,6 +163,7 @@ final class PasswordItemView: UIView, ItemableType {
     func set(appearance: Appearance) {
         self.appearance = appearance
         
+        bounds.size = appearance.itemSize
         layer.borderColor = appearance.textColor.cgColor
         layer.borderWidth = 1
         
@@ -175,11 +177,11 @@ final class PasswordItemView: UIView, ItemableType {
 class ViewController: UIViewController {
 
     // default item view
-//    let pinCodeInputView: PinCodeInputView<ItemView> = .init(
-//        digit: 6,
-//        itemFactory: {
-//            return ItemView()
-//    })
+    let pinCodeInputView: PinCodeInputView<ItemView> = .init(
+        digit: 6,
+        itemFactory: {
+            return ItemView()
+    })
 
     // customize item view
 //    let pinCodeInputView: PinCodeInputView<UnderlineItemView> = .init(
@@ -194,11 +196,11 @@ class ViewController: UIViewController {
 //            return CircleItemView()
 //    })
 
-    let pinCodeInputView: PinCodeInputView<PasswordItemView> = .init(
-        digit: 6,
-        itemFactory: {
-            return PasswordItemView()
-    })
+//    let pinCodeInputView: PinCodeInputView<PasswordItemView> = .init(
+//        digit: 4,
+//        itemFactory: {
+//            return PasswordItemView()
+//    })
 
     let titleLabel = UILabel()
 
@@ -230,7 +232,7 @@ class ViewController: UIViewController {
         })
         pinCodeInputView.set(
             appearance: .init(
-                itemSize: CGSize(width: 20, height: 30),
+                itemSize: CGSize(width: 44, height: 68),
                 font: .systemFont(ofSize: 28, weight: .bold),
                 textColor: .white,
                 backgroundColor: UIColor.white.withAlphaComponent(0.3),

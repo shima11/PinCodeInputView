@@ -33,9 +33,9 @@ public class PinCodeInputView<T: UIView & ItemableType>: UIControl, UITextInputT
     private var changeTextHandler: ((String) -> ())? = nil
     private let stackView: UIStackView = .init()
     private var items: [ContainerItem<T>] = []
-    
     private let itemFactory: () -> UIView
-    
+    private var appearance: Appearance?
+
     // MARK: - Initializers
     
     public init(
@@ -75,11 +75,21 @@ public class PinCodeInputView<T: UIView & ItemableType>: UIControl, UITextInputT
     override public func layoutSubviews() {
         super.layoutSubviews()
         
-        stackView.frame = bounds
+        guard let appearance = appearance else {
+            stackView.frame = bounds
+            return
+        }
+        stackView.bounds = CGRect(
+            x: 0,
+            y: 0,
+            width: (appearance.itemSize.width * CGFloat(digit)) + (appearance.spacing * CGFloat(digit - 1)),
+            height: appearance.itemSize.height
+        )
+        stackView.center = CGPoint(x: bounds.width / 2, y: bounds.height / 2)
     }
     
     override public var intrinsicContentSize: CGSize {
-        return bounds.size
+        return stackView.bounds.size
     }
 
     public func set(text: String) {
@@ -91,11 +101,11 @@ public class PinCodeInputView<T: UIView & ItemableType>: UIControl, UITextInputT
     public func set(changeTextHandler: @escaping (String) -> ()) {
         self.changeTextHandler = changeTextHandler
     }
-        
+    
     public func set(appearance: Appearance) {
+        self.appearance = appearance
         items.forEach { $0.item.set(appearance: appearance) }
         stackView.spacing = appearance.spacing
-//        stackView.bounds = CGRect(x: 0, y: 0, width: (appearance.itemSize.width * CGFloat(digit)) + (appearance.spacing * CGFloat(digit - 1)), height: appearance.itemSize.height)
     }
     
     private func updateText() {
