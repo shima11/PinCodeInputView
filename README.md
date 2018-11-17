@@ -103,4 +103,28 @@ let pinCodeInputView: PinCodeInputView<CustomItemView> = .init(
 
 ## Installation
 
+### Carthage
 
+For Installing with Carthage, and add it to your `Cartfile`.
+
+````
+github "shima11/PinCodeInputView"
+````
+````
+$ carthage update
+````
+
+### CocoaPods
+
+For installing with CocoaPods, and add it to your `Podfile`.
+```
+pod "PinCodeInputView"
+```
+```
+$ pod update
+```
+
+
+## License
+
+Licence MIT
