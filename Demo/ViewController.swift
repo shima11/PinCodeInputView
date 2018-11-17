@@ -179,6 +179,7 @@ class ViewController: UIViewController {
     // default item view
     let pinCodeInputView: PinCodeInputView<ItemView> = .init(
         digit: 6,
+        itemSpacing: 8,
         itemFactory: {
             return ItemView()
     })
@@ -237,8 +238,7 @@ class ViewController: UIViewController {
                 textColor: .white,
                 backgroundColor: UIColor.white.withAlphaComponent(0.3),
                 cursorColor: UIColor(red: 69/255, green: 108/255, blue: 1, alpha: 1),
-                cornerRadius: 8,
-                spacing: 8
+                cornerRadius: 8
             )
         )
         

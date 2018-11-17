@@ -57,6 +57,7 @@ import PinCodeInputView
 // initialize
 let pinCodeInputView: PinCodeInputView<ItemView> = .init(
     digit: 6,
+    itemSpacing: 8,
     itemFactory: {
     return ItemView()
 })
@@ -71,8 +72,7 @@ pinCodeInputView.set(
         textColor: .white,
         backgroundColor: .darkGray,
         cursorColor: .blue,
-        cornerRadius: 8,
-        spacing: 8
+        cornerRadius: 8
     )
 )
 
@@ -95,6 +95,7 @@ final class CustomItemView: UIView, ItemType {
 
 let pinCodeInputView: PinCodeInputView<CustomItemView> = .init(
     digit: 6,
+    itemSpacing: 8,
     itemFactory: {
     return CustomItemView()
 })

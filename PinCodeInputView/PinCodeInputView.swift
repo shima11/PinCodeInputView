@@ -30,7 +30,8 @@ public class PinCodeInputView<T: UIView & ItemType>: UIControl, UITextInputTrait
     }
     
     private let digit: Int
-    private var changeTextHandler: ((String) -> ())? = nil
+    private let itemSpacing: CGFloat
+    private var changeTextHandler: ((String) -> Void)? = nil
     private let stackView: UIStackView = .init()
     private var items: [ContainerItemView<T>] = []
     private let itemFactory: () -> UIView
@@ -40,10 +41,12 @@ public class PinCodeInputView<T: UIView & ItemType>: UIControl, UITextInputTrait
     
     public init(
         digit: Int,
+        itemSpacing: CGFloat,
         itemFactory: @escaping (() -> T)
         ) {
         
         self.digit = digit
+        self.itemSpacing = itemSpacing
         self.itemFactory = itemFactory
         
         super.init(frame: .zero)
@@ -59,9 +62,8 @@ public class PinCodeInputView<T: UIView & ItemType>: UIControl, UITextInputTrait
         
         addSubview(stackView)
         
-        items.forEach { item in
-            stackView.addArrangedSubview(item)
-        }
+        items.forEach { stackView.addArrangedSubview($0) }
+        stackView.spacing = itemSpacing
         stackView.axis = .horizontal
         stackView.distribution = .fillEqually
     }
@@ -79,10 +81,11 @@ public class PinCodeInputView<T: UIView & ItemType>: UIControl, UITextInputTrait
             stackView.frame = bounds
             return
         }
+        
         stackView.bounds = CGRect(
             x: 0,
             y: 0,
-            width: (appearance.itemSize.width * CGFloat(digit)) + (appearance.spacing * CGFloat(digit - 1)),
+            width: (appearance.itemSize.width * CGFloat(digit)) + (itemSpacing * CGFloat(digit - 1)),
             height: appearance.itemSize.height
         )
         stackView.center = CGPoint(x: bounds.width / 2, y: bounds.height / 2)
@@ -105,7 +108,6 @@ public class PinCodeInputView<T: UIView & ItemType>: UIControl, UITextInputTrait
     public func set(appearance: Appearance) {
         self.appearance = appearance
         items.forEach { $0.item.set(appearance: appearance) }
-        stackView.spacing = appearance.spacing
     }
     
     private func updateText() {
@@ -200,18 +202,13 @@ public struct Appearance {
     public let cursorColor: UIColor
     public let cornerRadius: CGFloat
     
-    // general appearance
-    
-    public let spacing: CGFloat
-    
     public init(
         itemSize: CGSize,
         font: UIFont,
         textColor: UIColor,
         backgroundColor: UIColor,
         cursorColor: UIColor,
-        cornerRadius: CGFloat,
-        spacing: CGFloat
+        cornerRadius: CGFloat
         ) {
         
         self.itemSize = itemSize
@@ -220,7 +217,6 @@ public struct Appearance {
         self.backgroundColor = backgroundColor
         self.cursorColor = cursorColor
         self.cornerRadius = cornerRadius
-        self.spacing = spacing
     }
 }
 
