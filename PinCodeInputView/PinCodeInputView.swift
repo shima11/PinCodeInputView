@@ -120,12 +120,14 @@ public class PinCodeInputView<T: UIView & ItemType>: UIControl, UITextInputTrait
                 item.itemView.text = nil
             }
         }
+        
         showCursor()
     }
     
     private func showCursor() {
         
         let cursorPosition = text.count
+        
         items.enumerated().forEach { (arg) in
             
             let (index, item) = arg

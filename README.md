@@ -64,7 +64,7 @@ let pinCodeInputView: PinCodeInputView<ItemView> = .init(
 
 view.addSubview(pinCodeInputView)
 
-// set appearanceå
+// set appearance
 pinCodeInputView.set(
     appearance: .init(
         itemSize: .init(width: 44, height: 68),
