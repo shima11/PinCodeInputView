@@ -96,7 +96,7 @@ public class PinCodeInputView<T: UIView & ItemType>: UIControl, UITextInputTrait
     }
 
     public func set(text: String) {
-        if text.isPinCode(digit: digit) {
+        if Validator.isPinCode(text: text, digit: digit) {
             self.text = text
         }
     }
@@ -147,7 +147,7 @@ public class PinCodeInputView<T: UIView & ItemType>: UIControl, UITextInputTrait
     }
     
     public func insertText(_ textToInsert: String) {
-        if isEnabled && text.count + textToInsert.count <= digit && textToInsert.isOnlyNumeric() {
+        if isEnabled && text.count + textToInsert.count <= digit && Validator.isOnlyNumeric(text: textToInsert) {
             text.append(textToInsert)
             sendActions(for: .editingChanged)
         }
