@@ -8,6 +8,7 @@
 
 import UIKit
 
+@IBDesignable
 public class PinCodeInputView<T: UIView & ItemType>: UIControl, UITextInputTraits, UIKeyInput {
     
     // MARK: - Properties
@@ -28,7 +29,15 @@ public class PinCodeInputView<T: UIView & ItemType>: UIControl, UITextInputTrait
     public var isFilled: Bool {
         return text.count == digit
     }
-    
+
+    public var hasText: Bool {
+        return !(text.isEmpty)
+    }
+
+    override public var intrinsicContentSize: CGSize {
+        return stackView.bounds.size
+    }
+
     private let digit: Int
     private let itemSpacing: CGFloat
     private var changeTextHandler: ((String) -> Void)? = nil
@@ -36,6 +45,16 @@ public class PinCodeInputView<T: UIView & ItemType>: UIControl, UITextInputTrait
     private var items: [ContainerItemView<T>] = []
     private let itemFactory: () -> UIView
     private var appearance: ItemAppearance?
+
+    // MARK: - UITextInputTraits
+
+    public var autocapitalizationType = UITextAutocapitalizationType.none
+    public var autocorrectionType = UITextAutocorrectionType.no
+    public var spellCheckingType = UITextSpellCheckingType.no
+    public var keyboardType = UIKeyboardType.numberPad
+    public var keyboardAppearance = UIKeyboardAppearance.default
+    public var returnKeyType = UIReturnKeyType.done
+    public var enablesReturnKeyAutomatically = true
 
     // MARK: - Initializers
     
@@ -90,10 +109,6 @@ public class PinCodeInputView<T: UIView & ItemType>: UIControl, UITextInputTrait
         )
         stackView.center = CGPoint(x: bounds.width / 2, y: bounds.height / 2)
     }
-    
-    override public var intrinsicContentSize: CGSize {
-        return stackView.bounds.size
-    }
 
     public func set(text: String) {
         if Validator.isPinCode(text: text, digit: digit) {
@@ -141,11 +156,7 @@ public class PinCodeInputView<T: UIView & ItemType>: UIControl, UITextInputTrait
     }
     
     // MARK: - UIKeyInput
-    
-    public var hasText: Bool {
-        return !(text.isEmpty)
-    }
-    
+
     public func insertText(_ textToInsert: String) {
         if isEnabled && text.count + textToInsert.count <= digit && Validator.isOnlyNumeric(text: textToInsert) {
             text.append(textToInsert)
@@ -159,17 +170,7 @@ public class PinCodeInputView<T: UIView & ItemType>: UIControl, UITextInputTrait
             sendActions(for: .editingChanged)
         }
     }
-    
-    // MARK: - UITextInputTraits
-    
-    public var autocapitalizationType = UITextAutocapitalizationType.none
-    public var autocorrectionType = UITextAutocorrectionType.no
-    public var spellCheckingType = UITextSpellCheckingType.no
-    public var keyboardType = UIKeyboardType.numberPad
-    public var keyboardAppearance = UIKeyboardAppearance.default
-    public var returnKeyType = UIReturnKeyType.done
-    public var enablesReturnKeyAutomatically = true
-    
+
     // MARK: - UIResponder
     
     @discardableResult

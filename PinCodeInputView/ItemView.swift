@@ -10,6 +10,7 @@ import UIKit
 
 // Default Item View
 
+@IBDesignable
 public class ItemView: UIView, ItemType {
     
     public var text: Character? = nil {
