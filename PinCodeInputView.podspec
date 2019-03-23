@@ -9,15 +9,13 @@
 Pod::Spec.new do |s|
 
   s.name         = "PinCodeInputView"
-  s.version      = "0.0.1"
+  s.version      = "1.0.0"
   s.summary      = "TextView for entering pin code. "
 
   s.description  = <<-DESC
 TextView for entering pin code. 
 You can create an input part of PinCode to use for phone number authentication.
                   DESC
-
-  # s.screenshots  = "www.example.com/screenshots_1.gif", "www.example.com/screenshots_2.gif"
 
   s.license      = { :type => "MIT", :file => "LICENSE" }
 
