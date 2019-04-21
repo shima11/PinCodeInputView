@@ -78,7 +78,8 @@ class ViewController: UIViewController {
                 textColor: .white,
                 backgroundColor: UIColor.white.withAlphaComponent(0.3),
                 cursorColor: UIColor(red: 69/255, green: 108/255, blue: 1, alpha: 1),
-                cornerRadius: 8
+                cornerRadius: 8,
+				borderColor: UIColor.red
             )
         )
         
