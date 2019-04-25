@@ -17,7 +17,8 @@ class ViewController: UIViewController {
         itemSpacing: 8,
         itemFactory: {
             return ItemView()
-    })
+    },
+		autoresizes: true)
 
     // customize item view (underline)
 //    let pinCodeInputView: PinCodeInputView<UnderlineItemView> = .init(
