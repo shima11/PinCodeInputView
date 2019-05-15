@@ -10,6 +10,8 @@ import UIKit
 import PinCodeInputView
 
 final class CircleItemView: UIView, ItemType {
+	var isSecureText: Bool = false
+	
     
     var text: Character? = nil {
         didSet {

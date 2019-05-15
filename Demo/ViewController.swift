@@ -18,7 +18,8 @@ class ViewController: UIViewController {
         itemFactory: {
             return ItemView()
     },
-		autoresizes: true)
+		autoresizes: true,
+		isSecureText: true)
 
     // customize item view (underline)
 //    let pinCodeInputView: PinCodeInputView<UnderlineItemView> = .init(
