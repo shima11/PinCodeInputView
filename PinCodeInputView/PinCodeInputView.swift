@@ -37,6 +37,12 @@ public class PinCodeInputView<T: UIView & ItemType>: UIControl, UITextInputTrait
     override public var intrinsicContentSize: CGSize {
         return stackView.bounds.size
     }
+	
+	public var isSecureText: Bool = false {
+		didSet {
+			self.items.forEach({$0.itemView.isSecureText = self.isSecureText})
+		}
+	}
 
     private let digit: Int
     private let itemSpacing: CGFloat
@@ -63,7 +69,8 @@ public class PinCodeInputView<T: UIView & ItemType>: UIControl, UITextInputTrait
         digit: Int,
         itemSpacing: CGFloat,
         itemFactory: @escaping (() -> T),
-		autoresizes: Bool = false) {
+		autoresizes: Bool = false,
+		isSecureText: Bool = false) {
         
         self.digit = digit
         self.itemSpacing = itemSpacing
@@ -79,10 +86,12 @@ public class PinCodeInputView<T: UIView & ItemType>: UIControl, UITextInputTrait
             }
             return item
         }
+		self.isSecureText = isSecureText
         self.stackView.frame = self.bounds
         addSubview(stackView)
         
         items.forEach { stackView.addArrangedSubview($0) }
+		items.forEach({$0.itemView.isSecureText = self.isSecureText})
         stackView.spacing = itemSpacing
         stackView.axis = .horizontal
         stackView.distribution = .fillEqually

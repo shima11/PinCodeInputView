@@ -10,6 +10,9 @@ import UIKit
 import PinCodeInputView
 
 final class PasswordItemView: UIView, ItemType {
+	
+	var isSecureText: Bool = false
+	
     
     var text: Character? = nil {
         didSet {

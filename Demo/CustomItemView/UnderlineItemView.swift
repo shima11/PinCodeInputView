@@ -10,6 +10,8 @@ import UIKit
 import PinCodeInputView
 
 final class UnderlineItemView: UIView, ItemType {
+	var isSecureText: Bool = false
+	
     
     var text: Character? = nil {
         didSet {

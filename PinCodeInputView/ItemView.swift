@@ -19,7 +19,7 @@ public class ItemView: UIView, ItemType {
                 label.text = nil
                 return
             }
-            label.text = String(text)
+			label.text = isSecureText ? "*" : String(text)
         }
     }
     
@@ -33,6 +33,14 @@ public class ItemView: UIView, ItemType {
 			}
         }
     }
+	
+	public var isSecureText: Bool = false {
+		didSet {
+			if let text = text {
+				label.text = isSecureText ? "*" : String(text)
+			}
+		}
+	}
     
     public let label: UILabel = .init()
     public let cursor: UIView = .init()

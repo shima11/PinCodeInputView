@@ -12,5 +12,6 @@ public protocol ItemType {
     
     var text: Character? { get set }
     var isHiddenCursor: Bool { get set }
+	var isSecureText: Bool {get set}
     func set(appearance: ItemAppearance)
 }
