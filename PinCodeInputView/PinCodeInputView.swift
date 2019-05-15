@@ -45,6 +45,7 @@ public class PinCodeInputView<T: UIView & ItemType>: UIControl, UITextInputTrait
     private var items: [ContainerItemView<T>] = []
     private let itemFactory: () -> UIView
     private var appearance: ItemAppearance?
+	private let autoResizes: Bool
 
     // MARK: - UITextInputTraits
 
@@ -61,13 +62,13 @@ public class PinCodeInputView<T: UIView & ItemType>: UIControl, UITextInputTrait
     public init(
         digit: Int,
         itemSpacing: CGFloat,
-        itemFactory: @escaping (() -> T)
-        ) {
+        itemFactory: @escaping (() -> T),
+		autoresizes: Bool = false) {
         
         self.digit = digit
         self.itemSpacing = itemSpacing
         self.itemFactory = itemFactory
-        
+        self.autoResizes = autoresizes
         super.init(frame: .zero)
         
         self.items = (0..<digit).map { _ in
@@ -78,7 +79,7 @@ public class PinCodeInputView<T: UIView & ItemType>: UIControl, UITextInputTrait
             }
             return item
         }
-        
+        self.stackView.frame = self.bounds
         addSubview(stackView)
         
         items.forEach { stackView.addArrangedSubview($0) }
@@ -122,6 +123,9 @@ public class PinCodeInputView<T: UIView & ItemType>: UIControl, UITextInputTrait
     
     public func set(appearance: ItemAppearance) {
         self.appearance = appearance
+		if autoResizes {
+			self.appearance = ItemAppearance(itemSize: CGSize(width: (self.bounds.width - (self.itemSpacing * CGFloat(self.digit))) / CGFloat(self.digit), height: appearance.itemSize.height), font: appearance.font, textColor: appearance.textColor, backgroundColor: appearance.backgroundColor, cursorColor: appearance.cursorColor, cornerRadius: appearance.cornerRadius, borderColor: appearance.borderColor)
+		}
         items.forEach { $0.itemView.set(appearance: appearance) }
     }
     

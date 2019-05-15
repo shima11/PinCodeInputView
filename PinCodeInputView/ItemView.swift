@@ -26,6 +26,11 @@ public class ItemView: UIView, ItemType {
     public var isHiddenCursor: Bool = true {
         didSet {
             cursor.isHidden = isHiddenCursor
+			if (isHiddenCursor) {
+				self.layer.borderWidth = 0
+			} else {
+				self.layer.borderWidth = 1
+			}
         }
     }
     
@@ -95,6 +100,7 @@ public class ItemView: UIView, ItemType {
         cursor.backgroundColor = appearance.cursorColor
         backgroundColor = appearance.backgroundColor
         layer.cornerRadius = appearance.cornerRadius
+		self.layer.borderColor = appearance.borderColor.cgColor
         layoutIfNeeded()
     }
 }
