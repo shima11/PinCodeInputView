@@ -129,6 +129,12 @@ public class PinCodeInputView<T: UIView & ItemType>: UIControl, UITextInputTrait
         items.forEach { $0.itemView.set(appearance: appearance) }
     }
     
+    public func set(appearance closure: (Int) -> ItemAppearance) {
+        items.enumerated().forEach { (index, value) in
+            value.itemView.set(appearance: closure(index))
+        }
+    }
+    
     private func updateText() {
         
         items.enumerated().forEach { (index, item) in
