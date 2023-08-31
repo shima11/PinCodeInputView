@@ -45,6 +45,7 @@ public class PinCodeInputView<T: UIView & ItemType>: UIControl, UITextInputTrait
     private var items: [ContainerItemView<T>] = []
     private let itemFactory: () -> UIView
     private var appearance: ItemAppearance?
+    private var itemSize: ItemSize?
 	private let autoResizes: Bool
 
     // MARK: - UITextInputTraits
@@ -97,7 +98,7 @@ public class PinCodeInputView<T: UIView & ItemType>: UIControl, UITextInputTrait
     override public func layoutSubviews() {
         super.layoutSubviews()
         
-        guard let appearance = appearance else {
+        guard let itemSize = itemSize else {
             stackView.frame = bounds
             return
         }
@@ -105,8 +106,8 @@ public class PinCodeInputView<T: UIView & ItemType>: UIControl, UITextInputTrait
         stackView.bounds = CGRect(
             x: 0,
             y: 0,
-            width: (appearance.itemSize.width * CGFloat(digit)) + (itemSpacing * CGFloat(digit - 1)),
-            height: appearance.itemSize.height
+            width: (itemSize.itemSize.width * CGFloat(digit)) + (itemSpacing * CGFloat(digit - 1)),
+            height: itemSize.itemSize.height
         )
         stackView.center = CGPoint(x: bounds.width / 2, y: bounds.height / 2)
     }
@@ -121,12 +122,11 @@ public class PinCodeInputView<T: UIView & ItemType>: UIControl, UITextInputTrait
         self.changeTextHandler = changeTextHandler
     }
     
-    public func set(appearance: ItemAppearance) {
-        self.appearance = appearance
+    public func set(itemSize: ItemSize) {
+        self.itemSize = itemSize
 		if autoResizes {
-			self.appearance = ItemAppearance(itemSize: CGSize(width: (self.bounds.width - (self.itemSpacing * CGFloat(self.digit))) / CGFloat(self.digit), height: appearance.itemSize.height), font: appearance.font, textColor: appearance.textColor, backgroundColor: appearance.backgroundColor, cursorColor: appearance.cursorColor, cornerRadius: appearance.cornerRadius, borderColor: appearance.borderColor)
+			self.itemSize = ItemSize(itemSize: CGSize(width: (self.bounds.width - (self.itemSpacing * CGFloat(self.digit))) / CGFloat(self.digit), height: itemSize.itemSize.height))
 		}
-        items.forEach { $0.itemView.set(appearance: appearance) }
     }
     
     public func set(appearance closure: (Int) -> ItemAppearance) {

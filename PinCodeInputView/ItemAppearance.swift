@@ -36,3 +36,12 @@ public struct ItemAppearance {
 		self.borderColor = borderColor
     }
 }
+
+public struct ItemSize {
+    
+    public let itemSize: CGSize
+
+    public init(itemSize: CGSize) {
+        self.itemSize = itemSize
+    }
+}
